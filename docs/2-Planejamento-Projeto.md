@@ -95,7 +95,7 @@ Os papéis abaixo são apenas para organização do time.
 
 ## 🗂️ Kanban (OBRIGATÓRIO)
 
-O projeto deve utilizar a aba **Projects** do GitHub.
+O projeto pode utilizar a aba **Projects** do GitHub, porém é **OBRIGATÓRIO preencher os quadros Kanban de cada Sprint** (apresentados abaixo).
 
 ### Estrutura obrigatória do Board:
 
