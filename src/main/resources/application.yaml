@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: kilow
+  datasource:
+    url: jdbc:sqlite:kilow_db.sqlite
+    driver-class-name: org.sqlite.JDBC
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    show-sql: false
+api:
+  security:
+    token:
+      secret: ${JWT_SECRET:hoje-e-domingo-pe-de-cachimbo}
