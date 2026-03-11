@@ -82,10 +82,10 @@ Os papéis abaixo são apenas para organização do time.
 
 ##  Definição dos Papéis – Sprint 1
 
-- 👨‍💻 Tech Lead:
-- 🗄️ Arquiteto de Dados:
-- 🧪 Gerente de Qualidade:
-- 📋 Facilitador Ágil:
+- 👨‍💻 Tech Lead: Maria Eduarda Salomão
+- 🗄️ Arquiteto de Dados: Yuri Martins Vieira e Maria Eduarada Salomão
+- 🧪 Gerente de Qualidade: Fabia Rodrigues de Oliveira 
+- 📋 Facilitador Ágil: Yuri Martins Vieira e Fabia Rodrigues de Oliveira
 
 > Caso os papéis mudem nas próximas Sprints, atualizar neste documento.
 
@@ -135,10 +135,10 @@ O projeto pode utilizar a aba **Projects** do GitHub, porém é **OBRIGATÓRIO p
 
 | Responsável | Papel | Tarefa | Início | Prazo | Status |
 |-------------|--------|--------|--------|--------|--------|
-|             |        | Preencher Visão do Produto, ODS e Backlog no README | 12/03 | 15/03 | ❌ |
-|             |        | Criar instância do Banco de Dados | 12/03 | 16/03 | ❌ |
-|             |        | Criar repositório e estruturar pastas | 12/03 | 18/03 | ❌ |
-|             |        | Criar tela Hello World conectada à API | 15/03 | 20/03 | ❌ |
+| Fabia Rodrigues de Oliveira | Facilitador ágil | Preencher Visão do Produto, ODS e Backlog no README | 01/03 | 10/03 | ✔️ |
+| Yuri Martins Vieira | Arquiteto de dados | Criar instância do Banco de Dados | 01/03 | 11/03 | ✔️ |
+| Maria Eduarda Salomão  | Tech Lead | Criar repositório e estruturar pastas | 01/03 | 11/03 | ❌ |
+| Maria Eduarda Salomão |  Tech Lead   | Criar tela Hello World conectada à API | 01/03 | 11/03 | ❌ |
 
 ---
 
