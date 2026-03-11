@@ -1,25 +1,26 @@
-# TÍTULO DO PROJETO
+# KiloW
 
-`CURSO`
+`CURSO`: Análise e Desenvolvimento de Sistemas
 
-`DISCIPLINA`
+`DISCIPLINA`: Trabalho Interdisciplinar: Aplicações Inovadoras
 
-`SEMESTRE`
+`SEMESTRE`: 5°
 
-Descrever resumidamente, em um ou dois parágrafos, o projeto que está sendo desenvolvido.
+O Kilow é um sistema inteligente focado na economia doméstica, projetado para dar transparência ao consumo de energia de forma intuitiva. Por meio de uma interface potencializada por IA, o usuário consegue visualizar exatamente o impacto financeiro de cada aparelho na conta de luz e acessar recomendações estratégicas, como a troca de equipamentos ineficientes e ajustes de hábitos para reduzir gastos desnecessários.
 
-ODS Alinhados:
+A solução elimina a barreira do conhecimento técnico sobre o setor elétrico, transformando dados complexos em diagnósticos visuais e comparativos mensais de fácil compreensão. Com foco na acessibilidade, o Kilow permite que qualquer perfil de usuário realize uma gestão energética eficiente, garantindo maior controle sobre o orçamento residencial diante do cenário de constantes reajustes tarifários.
+
+ODS Alinhados: Energia Limpa e Acessível (ODS 7), Redução das Desigualdades (ODS 10), Consumo e Produção Responsáveis (ODS 12)
 
 ## Integrantes
 
-* Nome completo do aluno 1
-* Nome completo do aluno 2
-* Nome completo do aluno 3
-* Nome completo do aluno 4
+* Fabia Rodrigues de Oliveira
+* Maria Eduarda Salomão Oliveira
+* Yuri Martins Vieira 
 
 ## Orientador
 
-* Nome completo do professor 1
+* Juliana Padilha 
 
 ## Instruções de utilização
 
