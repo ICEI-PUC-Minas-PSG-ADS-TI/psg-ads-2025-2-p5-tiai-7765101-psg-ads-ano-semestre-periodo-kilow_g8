@@ -83,7 +83,7 @@ Os papéis abaixo são apenas para organização do time.
 ##  Definição dos Papéis – Sprint 1
 
 - 👨‍💻 Tech Lead: Maria Eduarda Salomão
-- 🗄️ Arquiteto de Dados: Yuri Martins Vieira e Maria Eduarada Salomão
+- 🗄️ Arquiteto de Dados: Yuri Martins Vieira e Maria Eduarda Salomão
 - 🧪 Gerente de Qualidade: Fabia Rodrigues de Oliveira 
 - 📋 Facilitador Ágil: Yuri Martins Vieira e Fabia Rodrigues de Oliveira
 
@@ -137,8 +137,8 @@ O projeto pode utilizar a aba **Projects** do GitHub, porém é **OBRIGATÓRIO p
 |-------------|--------|--------|--------|--------|--------|
 | Fabia Rodrigues de Oliveira | Facilitador ágil | Preencher Visão do Produto, ODS e Backlog no README | 01/03 | 10/03 | ✔️ |
 | Yuri Martins Vieira | Arquiteto de dados | Criar instância do Banco de Dados | 01/03 | 11/03 | ✔️ |
-| Maria Eduarda Salomão  | Tech Lead | Criar repositório e estruturar pastas | 01/03 | 11/03 | ❌ |
-| Maria Eduarda Salomão |  Tech Lead   | Criar tela Hello World conectada à API | 01/03 | 11/03 | ❌ |
+| Maria Eduarda Salomão  | Tech Lead | Criar repositório e estruturar pastas | 01/03 | 11/03 | ✔️ |
+| Maria Eduarda Salomão |  Tech Lead   | Criar tela Hello World conectada à API | 01/03 | 11/03 | ✔️ |
 
 ---
 
@@ -146,10 +146,11 @@ O projeto pode utilizar a aba **Projects** do GitHub, porém é **OBRIGATÓRIO p
 
 | Responsável | Papel | Tarefa | Início | Prazo | Status |
 |-------------|--------|--------|--------|--------|--------|
-|             |        | Gerar Script do Banco de Dados | 21/03 | 24/03 | ❌ |
-|             |        | Desenvolver Fatia 1 (BD + API + Tela) | 22/03 | 30/03 | ❌ |
-|             |        | Documentar Requisitos do MVP | 25/03 | 02/04 | ❌ |
-|             |        | Revisão técnica e Merge | 02/04 | 05/04 | ❌ |
+| Maria Eduarda Salomão | Tech Lead | Gerar Script do Banco de Dados | 21/03 | 25/03 | ❌ |
+| Maria Eduarda Salomão | Tech Lead | Desenvolver Fatia 1 (BD + API + Tela) - Cadastro e login de usuários | 21/03 | 06/04 | ❌ |
+| Fabia Rodrigues | Facilitador Ágil | Desenvolver Fatia 1 (BD + API + Tela) - Cadastro de dispositivo | 21/03 | 06/04 | ❌ |
+| Yuri Martins | Facilitador Ágil | Documentar Requisitos do MVP | 25/03 | 06/04 | ❌ |
+| Equipe     | Reunião via Teams | Revisão técnica e Merge | 02/04 | 06/04 | ❌ |
 
 ---
 
