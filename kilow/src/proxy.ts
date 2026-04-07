@@ -23,7 +23,8 @@ export const config = {
      * - _next/static (arquivos JS e CSS compilados)
      * - _next/image (imagens otimizadas)
      * - favicon.ico (ícone do site)
+     * - assets (sua pasta de imagens)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|assets).*)',
   ],
 };
