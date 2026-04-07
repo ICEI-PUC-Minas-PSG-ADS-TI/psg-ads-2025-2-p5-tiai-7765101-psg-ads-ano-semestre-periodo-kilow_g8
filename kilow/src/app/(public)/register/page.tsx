@@ -5,6 +5,10 @@ import { Toast } from '@base-ui/react';
 import MiniIdeaLoader from '@/components/loading';
 import { userRegisterAction } from '@/actions/auth';
 import { useRouter } from 'next/navigation';
+import { StyledText } from '../text';
+import Image from 'next/image';
+import StyledInput from '@/components/input';
+import { colors } from '@/components/theme';
 
 const UserRegisterPage = () => {
   const [nome, setNome] = useState('');
@@ -70,39 +74,178 @@ const UserRegisterPage = () => {
     <div
       style={{
         display: 'flex',
-        flexDirection: 'column',
-        gap: 24,
-        maxWidth: '60%',
-        margin: 'auto',
+        minHeight: '100vh',
+        justifyContent: 'space-between',
       }}
     >
-      <h3>Faça parte da nossa comunidade!</h3>
-      <input
-        value={nome}
-        onChange={(e) => setNome(e.target.value)}
-        type="text"
-        placeholder="Nome completo"
-      />
-      <input
-        value={cpf}
-        onChange={(e) => setCpf(e.target.value)}
-        type="number"
-        maxLength={11}
-        placeholder="CPF"
-      />
-      <input
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        type="email"
-        placeholder="Email"
-      />
-      <input
-        value={senha}
-        onChange={(e) => setSenha(e.target.value)}
-        type="text"
-        placeholder="Senha"
-      />
-      <button onClick={handleSubmit}>Enviar</button>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 20,
+          width: '70%',
+          justifyContent: 'center',
+          paddingLeft: 100,
+        }}
+      >
+        <img
+          src={'/assets/registerPage2.png'}
+          width="20%"
+          style={{ position: 'absolute', right: 700, zIndex: -1, top: -4 }}
+        />
+        <div>
+          <div>
+            <StyledText size={36} weight={650} color="darkBlue">
+              Cadastre-se
+            </StyledText>
+            <StyledText size={20} weight={400} color="darkBlue">
+              Preencha todos os campos
+            </StyledText>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 20,
+              maxWidth: '50%',
+            }}
+          >
+            <StyledInput
+              label="Nome completo"
+              required
+              value={nome}
+              onChange={setNome}
+              placeholder="ex.: Maria José Silva"
+              type="text"
+            />
+            <StyledInput
+              label="CPF"
+              required
+              value={cpf}
+              onChange={setCpf}
+              placeholder="ex.: 1234567890"
+              type="text"
+            />
+            <StyledInput
+              label="Email"
+              required
+              value={email}
+              onChange={setEmail}
+              placeholder="ex.: maria@gmail.com"
+              type="email"
+            />
+            <StyledInput
+              label="Senha"
+              required
+              value={senha}
+              onChange={setSenha}
+              placeholder="ex.: maria123*"
+              type="password"
+            />
+
+            <button
+              onClick={handleSubmit}
+              style={{
+                backgroundColor: colors.darkBlue,
+                color: colors.yellow,
+                fontSize: 28,
+                padding: 8,
+                borderRadius: 12,
+                border: 0,
+                marginBlock: 12,
+              }}
+            >
+              Cadastrar
+            </button>
+            <div
+              style={{
+                backgroundColor: '#1E392A',
+                height: 1,
+              }}
+            />
+            <p style={{ textAlign: 'center' }}>
+              Já tem uma conta?{' '}
+              <span
+                onClick={() => router.push('/')}
+                style={{
+                  cursor: 'pointer',
+                  color: '#2D5D7B',
+                  fontWeight: 'bold',
+                }}
+              >
+                Faça login agora
+              </span>{' '}
+              e continue de onde parou!
+            </p>
+          </div>
+        </div>
+      </div>
+      <div
+        style={{
+          width: '35%',
+          backgroundColor: '#2D5D7B',
+          padding: 48,
+          gap: 48,
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        <div>
+          <div
+            style={{
+              width: '60%',
+              backgroundColor: '#FFD23F',
+              borderRadius: 100,
+              height: 12,
+              marginLeft: 220,
+            }}
+          >
+            {' '}
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 24,
+            }}
+          >
+            <StyledText color="yellow" size={96} weight={600}>
+              KiloW
+            </StyledText>
+            <Image
+              src="/assets/Greentech.png"
+              alt="icone"
+              width={85}
+              height={85}
+            />
+          </div>
+          <div
+            style={{
+              width: '60%',
+              backgroundColor: '#FFD23F',
+              borderRadius: 100,
+              height: 12,
+              marginLeft: -28,
+            }}
+          >
+            {' '}
+          </div>
+        </div>
+        <StyledText
+          color="white"
+          size={28}
+          weight={350}
+          maxWidth={300}
+          textAlign="left"
+        >
+          Se junte a nós e entenda suas contas de outra forma ;)
+        </StyledText>
+        <img
+          src={'/assets/registerPage.png'}
+          alt="loginImagePage"
+          width="100%"
+        />
+      </div>
     </div>
   );
 };
