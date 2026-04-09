@@ -32,7 +32,7 @@ export const StyledRoot = styled(Toast.Root)`
   border: 1px solid #e2e8f0;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 
-  /* Animações baseadas no estado do Base UI */
+  /* Animações */
   &[data-state='open'] {
     animation: ${slideIn} 200ms ease-out;
   }
@@ -52,6 +52,7 @@ export const StyledDescription = styled(Toast.Description)`
   font-size: 0.875rem;
   color: #718096;
   margin: 0;
+  display: flex;
 `;
 
 export const StyledClose = styled(Toast.Close)`

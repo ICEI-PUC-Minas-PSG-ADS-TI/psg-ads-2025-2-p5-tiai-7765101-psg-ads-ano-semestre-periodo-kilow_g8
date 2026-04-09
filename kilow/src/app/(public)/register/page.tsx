@@ -71,29 +71,36 @@ const UserRegisterPage = () => {
   };
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        minHeight: '100vh',
-        justifyContent: 'space-between',
-      }}
-    >
+    <div style={{ display: 'flex', minHeight: '100vh', width: '100vw' }}>
       <div
         style={{
+          flex: 1,
           display: 'flex',
           flexDirection: 'column',
-          gap: 20,
-          width: '70%',
           justifyContent: 'center',
-          paddingLeft: 100,
+          paddingLeft: 120,
+          position: 'relative',
         }}
       >
         <img
           src={'/assets/registerPage2.png'}
-          width="20%"
-          style={{ position: 'absolute', right: 700, zIndex: -1, top: -4 }}
+          style={{
+            position: 'absolute',
+            right: '8%',
+            top: '5%',
+            width: '30%',
+            zIndex: -1,
+          }}
+          alt="decoracao"
         />
-        <div>
+        <div
+          style={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '20px',
+          }}
+        >
           <div>
             <StyledText size={36} weight={650} color="darkBlue">
               Cadastre-se
@@ -102,11 +109,12 @@ const UserRegisterPage = () => {
               Preencha todos os campos
             </StyledText>
           </div>
+
           <div
             style={{
               display: 'flex',
               flexDirection: 'column',
-              gap: 20,
+              gap: 24,
               maxWidth: '50%',
             }}
           >
@@ -140,7 +148,7 @@ const UserRegisterPage = () => {
               value={senha}
               onChange={setSenha}
               placeholder="ex.: maria123*"
-              type="password"
+              type="text"
             />
 
             <button
@@ -196,7 +204,7 @@ const UserRegisterPage = () => {
               width: '60%',
               backgroundColor: '#FFD23F',
               borderRadius: 100,
-              height: 12,
+              height: 8,
               marginLeft: 220,
             }}
           >
@@ -209,14 +217,14 @@ const UserRegisterPage = () => {
               gap: 24,
             }}
           >
-            <StyledText color="yellow" size={96} weight={600}>
+            <StyledText color="yellow" size={76} weight={600}>
               KiloW
             </StyledText>
             <Image
               src="/assets/Greentech.png"
               alt="icone"
-              width={85}
-              height={85}
+              width={75}
+              height={77}
             />
           </div>
           <div
@@ -224,7 +232,7 @@ const UserRegisterPage = () => {
               width: '60%',
               backgroundColor: '#FFD23F',
               borderRadius: 100,
-              height: 12,
+              height: 8,
               marginLeft: -28,
             }}
           >

@@ -7,13 +7,12 @@ export const spin = keyframes`
 `;
 
 export const LoadingContainer = styled.div`
-    display: flex,
-    width: fit-content,
-    height: fit-content,
-    align-items: center,
-    justify-content: center,
-    background-color: #f5f5f5,
-    borderRadius: 100%,
+  display: flex;
+  width: fit-content;
+  height: fit-content;
+  align-items: center;
+  justify-content: center;
+  borderradius: 100%;
 `;
 
 export const amberGlow = keyframes`
