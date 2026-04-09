@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { Toast } from '@base-ui/react/toast';
 import {
+  StyledClose,
   StyledDescription,
   StyledRoot,
   StyledTitle,
@@ -35,13 +36,14 @@ function ToastList() {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'flex-start',
+          gap: '12px',
         }}
       >
-        <div>
+        <div style={{ flex: 1 }}>
           <StyledTitle />
           <StyledDescription />
         </div>
-        <StyledDescription aria-label="Fechar">×</StyledDescription>
+        <StyledClose aria-label="Fechar toast">×</StyledClose>
       </div>
     </StyledRoot>
   ));

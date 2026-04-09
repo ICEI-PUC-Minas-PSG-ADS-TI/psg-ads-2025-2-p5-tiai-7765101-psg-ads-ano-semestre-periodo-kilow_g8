@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { colors } from '../theme';
 
 export const InputStyle = styled.input`
-  height: 32px;
+  height: 52px;
   border-radius: 12px;
   border: 2px solid ${colors.lightGray};
   outline: ${colors.lightGray};
@@ -19,4 +19,14 @@ export const InputStyle = styled.input`
     opacity: 1;
   }
 }
+`;
+
+export const PasswordVisibilityButton = styled.button`
+  position: absolute;
+  background: transparent;
+  right: 1%;
+  top: 30%;
+  border: none;
+  cursor: pointer;
+  color: ${colors.darkGreen};
 `;

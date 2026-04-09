@@ -1,5 +1,8 @@
 import { StyledText } from '@/app/(public)/text';
-import { InputStyle } from './styles';
+import { InputStyle, PasswordVisibilityButton } from './styles';
+import { useState } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
+import { colors } from '../theme';
 
 export interface IStyledInput {
   value: string;
@@ -18,12 +21,18 @@ const StyledInput = ({
   label,
   required,
 }: IStyledInput) => {
+  const [mostrarSenha, setMostrarSenha] = useState(false);
+
+  const isPassword = type === 'password';
+
+  const inputType = isPassword && mostrarSenha ? 'text' : type;
   return (
     <div
       style={{
         gap: 12,
         display: 'flex',
         flexDirection: 'column',
+        position: 'relative',
       }}
     >
       {label && (
@@ -33,11 +42,19 @@ const StyledInput = ({
         </StyledText>
       )}
       <InputStyle
-        type={type}
+        type={inputType}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
       />
+      {isPassword && (
+        <PasswordVisibilityButton
+          aria-label={mostrarSenha ? 'Ocultar senha' : 'Mostrar senha'}
+          onClick={() => setMostrarSenha(!mostrarSenha)}
+        >
+          {mostrarSenha ? <EyeOff size={20} /> : <Eye size={20} />}
+        </PasswordVisibilityButton>
+      )}
     </div>
   );
 };
