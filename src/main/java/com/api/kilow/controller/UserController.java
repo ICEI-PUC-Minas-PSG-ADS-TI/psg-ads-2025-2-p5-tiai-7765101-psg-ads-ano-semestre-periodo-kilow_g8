@@ -1,9 +1,9 @@
 package com.api.kilow.controller;
 
-import com.api.kilow.dto.LoginRequestDTO;
-import com.api.kilow.dto.LoginResponseDTO;
-import com.api.kilow.dto.UserCreateDTO;
-import com.api.kilow.dto.UserCreateResponseDTO;
+import com.api.kilow.dto.user.LoginRequestDTO;
+import com.api.kilow.dto.user.LoginResponseDTO;
+import com.api.kilow.dto.user.UserCreateDTO;
+import com.api.kilow.dto.user.UserCreateResponseDTO;
 import com.api.kilow.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -1,4 +1,4 @@
-package com.api.kilow.dto;
+package com.api.kilow.dto.user;
 
 import lombok.Data;
 

@@ -1,5 +1,6 @@
 package com.api.kilow.config;
 
+import com.api.kilow.exception.RulesException;
 import com.api.kilow.repository.UserRepository;
 import com.api.kilow.service.TokenService;
 import jakarta.servlet.FilterChain;
@@ -30,7 +31,7 @@ public class SecurityFilter extends OncePerRequestFilter {
             var login = tokenService.validateToken(token);
             if (login != null && !login.isEmpty()) {
                 var user = userRepository.findByEmail(login)
-                        .orElseThrow(() -> new RuntimeException("Usuário não encontrado no filtro"));
+                        .orElseThrow(() -> new RulesException("Usuário não encontrado no filtro"));
 
                 var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 

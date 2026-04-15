@@ -29,6 +29,8 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String senha;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Device> dispositivos;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

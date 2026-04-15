@@ -41,7 +41,7 @@ dependencies {
 	annotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
 
 	//Swagger
-	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.4.0")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.3")
 
 	//Spring Security
 	implementation("org.springframework.boot:spring-boot-starter-security")
