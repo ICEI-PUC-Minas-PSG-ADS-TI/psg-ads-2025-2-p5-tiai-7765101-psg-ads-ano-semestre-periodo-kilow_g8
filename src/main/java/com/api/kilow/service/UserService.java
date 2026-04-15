@@ -1,13 +1,13 @@
 package com.api.kilow.service;
 
-import com.api.kilow.dto.LoginRequestDTO;
-import com.api.kilow.dto.LoginResponseDTO;
-import com.api.kilow.dto.UserCreateDTO;
-import com.api.kilow.dto.UserCreateResponseDTO;
+import com.api.kilow.dto.user.LoginRequestDTO;
+import com.api.kilow.dto.user.LoginResponseDTO;
+import com.api.kilow.dto.user.UserCreateDTO;
+import com.api.kilow.dto.user.UserCreateResponseDTO;
+import com.api.kilow.exception.RulesException;
 import com.api.kilow.mapper.UserMapper;
 import com.api.kilow.model.User;
 import com.api.kilow.repository.UserRepository;
-import org.antlr.v4.runtime.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -47,14 +47,14 @@ public class UserService {
 
     public LoginResponseDTO login(LoginRequestDTO requestDTO){
         var user = userRepository.findByEmail(requestDTO.getEmail())
-                .orElseThrow(()-> new RuntimeException("Usuário não encontrado"));
+                .orElseThrow(()-> new RulesException("Usuário não encontrado"));
 
         if(passwordEncoder.matches(requestDTO.getSenha(), user.getSenha())){
             String token = tokenService.generateToken(user);
 
             return userMapper.modelToResponseLoginDto(user, token);
         }else{
-            throw new RuntimeException("Senha inválida");
+            throw new RulesException("Senha inválida");
         }
     }
 }

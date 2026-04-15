@@ -1,8 +1,8 @@
 package com.api.kilow.mapper;
 
-import com.api.kilow.dto.LoginResponseDTO;
-import com.api.kilow.dto.UserCreateDTO;
-import com.api.kilow.dto.UserCreateResponseDTO;
+import com.api.kilow.dto.user.LoginResponseDTO;
+import com.api.kilow.dto.user.UserCreateDTO;
+import com.api.kilow.dto.user.UserCreateResponseDTO;
 import com.api.kilow.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
