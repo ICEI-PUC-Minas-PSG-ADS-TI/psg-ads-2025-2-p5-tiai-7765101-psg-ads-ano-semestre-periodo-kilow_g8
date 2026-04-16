@@ -146,11 +146,11 @@ O projeto pode utilizar a aba **Projects** do GitHub, porém é **OBRIGATÓRIO p
 
 | Responsável | Papel | Tarefa | Início | Prazo | Status |
 |-------------|--------|--------|--------|--------|--------|
-| Maria Eduarda Salomão | Tech Lead | Gerar Script do Banco de Dados | 21/03 | 25/03 | ❌ |
-| Maria Eduarda Salomão | Tech Lead | Desenvolver Fatia 1 (BD + API + Tela) - Cadastro e login de usuários | 21/03 | 06/04 | ❌ |
-| Fabia Rodrigues | Facilitador Ágil | Desenvolver Fatia 1 (BD + API + Tela) - Cadastro de dispositivo | 21/03 | 06/04 | ❌ |
-| Yuri Martins | Facilitador Ágil | Documentar Requisitos do MVP | 25/03 | 06/04 | ❌ |
-| Equipe     | Reunião via Teams | Revisão técnica e Merge | 02/04 | 06/04 | ❌ |
+| Maria Eduarda Salomão | Tech Lead | Gerar Script do Banco de Dados | 21/03 | 25/03 | ✔️ |
+| Maria Eduarda Salomão | Tech Lead | Desenvolver Fatia 1 (BD + API + Tela) - Cadastro e login de usuários | 21/03 | 06/04 | ✔️ |
+| Fabia Rodrigues | Facilitador Ágil | Desenvolver Fatia 1 (BD + API + Tela) - Cadastro de dispositivo | 21/03 | 06/04 | 📝 |
+| Yuri Martins | Facilitador Ágil | Documentar Requisitos do MVP | 25/03 | 06/04 | ✔️ |
+| Equipe     | Reunião via Teams | Revisão técnica e Merge | 02/04 | 06/04 | ✔️ |
 
 ---
 
