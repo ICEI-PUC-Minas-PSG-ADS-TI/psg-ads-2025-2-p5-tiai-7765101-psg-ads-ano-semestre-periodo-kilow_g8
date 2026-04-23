@@ -1,108 +1,99 @@
 package com.api.kilow.service;
 
-import com.api.kilow.dto.device.CreateDeviceRequestDTO;
-import com.api.kilow.dto.device.CreateDeviceResponseDTO;
-import com.api.kilow.dto.device.GetDeviceResponseDTO;
+import com.api.kilow.dto.device.*;
 import com.api.kilow.exception.RulesException;
-import com.api.kilow.mapper.DeviceMapper;
 import com.api.kilow.model.Device;
 import com.api.kilow.model.User;
 import com.api.kilow.repository.DeviceRepository;
-import com.api.kilow.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class DeviceService {
 
-    @Autowired
-    private DeviceRepository deviceRepository;
+  @Autowired private DeviceRepository deviceRepository;
 
-    @Autowired
-    private DeviceMapper deviceMapper;
+  @Autowired private LoggedUserService loggedUserService;
 
-    @Autowired
-    private UserRepository userRepository;
+  public CreateDeviceResponse createDevice(CreateDeviceRequest requestDTO) {
+    User loggedUser = loggedUserService.getUser();
 
-    public CreateDeviceResponseDTO createDevice(CreateDeviceRequestDTO requestDTO) {
-        Device device = deviceMapper.dtoToModel(requestDTO);
+    Device device = new Device();
+    device.setUser(loggedUser);
+    device.setNome(requestDTO.nome());
+    device.setConsumoWatts(requestDTO.consumoWatts());
+    device.setUsoDiasSemana(requestDTO.usoDiasSemana());
+    device.setUsoMinutosHorasDia(requestDTO.usoMinutosHorasDia());
 
-        User relatedUser = getRelatedUser();
+    Device createdDevice = deviceRepository.save(device);
 
-        device.setUser(relatedUser);
+    return new CreateDeviceResponse(createdDevice.getNome(), createdDevice.getId());
+  }
 
-        Device savedDevice = deviceRepository.save(device);
+  public List<GetDeviceResponse> getAllDevices() {
 
-        return deviceMapper.modelToCreateResponseDto(savedDevice);
+    User loggedUser = loggedUserService.getUser();
+
+    return deviceRepository.findByUser(loggedUser).stream()
+        .map(
+            device -> {
+              Double kWhConsumption = getMonthlyKWhConsumption(device);
+
+              return new GetDeviceResponse(
+                  device.getId(),
+                  device.getNome(),
+                  device.getConsumoWatts(),
+                  device.getUsoMinutosHorasDia(),
+                  device.getUsoDiasSemana(),
+                  kWhConsumption);
+            })
+        .toList();
+  }
+
+  public void deleteDevice(Long id) {
+    Device deviceToDelete =
+        deviceRepository
+            .findById(id)
+            .orElseThrow(
+                () -> new RulesException("Dispositivo não encontrado. Verifique o ID digitado."));
+
+    validateUser(deviceToDelete);
+
+    deviceRepository.delete(deviceToDelete);
+  }
+
+  public UpdateDeviceResponse updateDevice(UpdateDeviceRequest requestDTO, Long deviceId) {
+    Device deviceToUpdate =
+        deviceRepository
+            .findById(deviceId)
+            .orElseThrow(() -> new RulesException("Dispositivo não encontrado"));
+
+    validateUser(deviceToUpdate);
+
+    deviceToUpdate.setNome(requestDTO.nome());
+    deviceToUpdate.setConsumoWatts(requestDTO.consumoWatts());
+    deviceToUpdate.setUsoDiasSemana(requestDTO.usoDiasSemana());
+    deviceToUpdate.setUsoMinutosHorasDia(requestDTO.usoMinutosHorasDia());
+
+    Device updatedDevice = deviceRepository.save(deviceToUpdate);
+
+    Double updatedKWhConsumption = getMonthlyKWhConsumption(updatedDevice);
+
+    return new UpdateDeviceResponse(
+        updatedDevice.getNome(), updatedDevice.getId(), updatedKWhConsumption);
+  }
+
+  private Double getMonthlyKWhConsumption(Device device) {
+    Double hoursPerDay = device.getUsoMinutosHorasDia() / 60.0;
+    Double daysPerMonth = (device.getUsoDiasSemana() * 30.0) / 7.0;
+    Double grossTotal = (device.getConsumoWatts() * hoursPerDay * daysPerMonth) / 1000.0;
+    return Math.round(grossTotal * 100.0) / 100.0;
+  }
+
+  private void validateUser(Device device) {
+    if (!device.getUser().getId().equals(loggedUserService.getUserId())) {
+      throw new RulesException("Você não tem permissão para alterar este dispositivo.");
     }
-
-    public List<GetDeviceResponseDTO> getAllDevices(){
-        User relatedUser = getRelatedUser();
-
-        return deviceRepository.findByUser(relatedUser)
-                .stream()
-                .map(device -> {
-                    GetDeviceResponseDTO relatedDevice = deviceMapper.modelToGetResponseDto(device);
-                    Double consumoKWh = getConsumoMensalKWh(device);
-                    relatedDevice.setConsumoMensalKWh(consumoKWh);
-                    return relatedDevice;
-                }).toList();
-    }
-
-    public void deleteDevice(Long id){
-        Device deviceToDelete = deviceRepository.findById(id)
-                .orElseThrow(() -> new RulesException("Dispositivo não encontrado"));
-
-        validateUser(deviceToDelete.getUser());
-
-        deviceRepository.delete(deviceToDelete);
-    }
-
-    public CreateDeviceResponseDTO updateDevice (CreateDeviceRequestDTO requestDTO, Long deviceId) {
-        Device deviceToUpdate = deviceRepository.findById(deviceId)
-                .orElseThrow(()-> new RulesException("Dispositivo não encontrado"));
-
-        validateUser(deviceToUpdate.getUser());
-
-        deviceToUpdate.setNome(requestDTO.getNome());
-        deviceToUpdate.setConsumoWatts(requestDTO.getConsumoWatts());
-        deviceToUpdate.setUsoDiasSemana(requestDTO.getUsoDiasSemana());
-        deviceToUpdate.setUsoMinutosHorasDia(requestDTO.getUsoMinutosHorasDia());
-
-        Device updatedDevice = deviceRepository.save(deviceToUpdate);
-
-        return deviceMapper.modelToCreateResponseDto(updatedDevice);
-    }
-
-    private User getRelatedUser (){
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new RulesException("Acesso negado: Usuário não autenticado no sistema");
-        }
-
-        String relatedUserEmail = authentication.getName();
-
-        return userRepository.findByEmail(relatedUserEmail)
-                .orElseThrow(() -> new RulesException("Usuário não encontrado no banco de dados"));
-    }
-
-    private Double getConsumoMensalKWh(Device device){
-        Double horasTotais = device.getUsoMinutosHorasDia() / 60.0;
-        Integer diasTotais = device.getUsoDiasSemana() * 4;
-        return (device.getConsumoWatts() * horasTotais * diasTotais) / 1000.0;
-    }
-
-    private void validateUser(User referenceUser){
-        User tokenUser = getRelatedUser();
-
-        if(!referenceUser.getId().equals(tokenUser.getId())){
-            throw new RulesException("Acesso negado: Você não tem permissão para excluir este aparelho");
-        }
-
-    }
-
+  }
 }
