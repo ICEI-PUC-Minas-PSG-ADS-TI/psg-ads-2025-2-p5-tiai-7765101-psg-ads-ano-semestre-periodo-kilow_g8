@@ -1,4 +1,8 @@
 spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
   application:
     name: kilow
   datasource:
@@ -13,3 +17,8 @@ api:
   security:
     token:
       secret: ${JWT_SECRET:hoje-e-domingo-pe-de-cachimbo}
+  scrape:
+    token: ${SCRAPE_TOKEN}
+  gemini:
+    key: ${GEMINI_KEY}
+    url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=
