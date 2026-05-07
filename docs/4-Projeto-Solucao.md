@@ -61,7 +61,7 @@ Cada Wireframe ou Mockups devem estar associados a pelo menos:
 
 **Descrição:** A interface contempla a história de usuário, permitindo o acesso à plataforma e validando somente autenticações com registro prévio.
 
-## 📌 Tela de Cadastro (RF-02)
+## 📌 Tel Cadastro do Dispositivo (RF-02)
 
 **História 2 (relacionada ao RF-01)**: Como usuário doméstico, quero cadastrar e gerenciar meus dispositivos elétricos no sistema de forma simples e intuitiva, para que eu possa registrar as informações necessárias com clareza e sem dificuldades, e assim ter acesso aos recursos disponíveis na plataforma, como o cálculo do consumo energético dos meus dispositivos.
 
@@ -70,7 +70,7 @@ Cada Wireframe ou Mockups devem estar associados a pelo menos:
 
 **Descrição:** A interface contempla a história de usuário, permitindo que o usuário cadastre o dispositivo com as principais informações que serão utilizadas para o cálculo.
 
-## 📌 Tela de Cadastro (RF-02)
+## 📌 Tela Lista dos Dispositivos  (RF-02)
 
 **História 2 (relacionada ao RF-01)**: Como usuário doméstico, quero cadastrar e gerenciar meus dispositivos elétricos no sistema de forma simples e intuitiva, para que eu possa registrar as informações necessárias com clareza e sem dificuldades, e assim ter acesso aos recursos disponíveis na plataforma, como o cálculo do consumo energético dos meus dispositivos.
 
@@ -84,9 +84,9 @@ Cada Wireframe ou Mockups devem estar associados a pelo menos:
 
 ## 4.4 Modelagem de Dados (Sprint 2 e 3)
 
-O sistema exige persistência de dados.
+A imagem abaixo apresenta a modelagem utilizada para implementação das Sprints 2 e 3.
+<img src="images/er_diagram.png" width="85%">
 
-A documentação do banco seguirá a abordagem de **entrega contínua**, sendo expandida conforme evolução do projeto.
 
 ---
 
