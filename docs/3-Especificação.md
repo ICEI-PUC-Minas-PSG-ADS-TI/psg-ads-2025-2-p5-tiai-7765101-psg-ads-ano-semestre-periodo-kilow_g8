@@ -45,11 +45,14 @@ Os **Requisitos Funcionais (RF)** descrevem o que o sistema deve fazer.
  
 **História 1 (relacionada ao RF-01)**
 Como usuário doméstico, eu quero criar uma conta e acessar o sistema com segurança, para que meus dados de consumo e aparelhos cadastrados não sejam perdidos e fiquem protegidos.
+
+**História 2 (relacionada ao RF-02)**
+Como usuário doméstico, quero cadastrar e gerenciar meus dispositivos elétricos no sistema de forma simples e intuitiva, para que eu possa registrar as informações necessárias com clareza e sem dificuldades, e assim ter acesso aos recursos disponíveis na plataforma, como o cálculo do consumo energético dos meus dispositivos.
  
-**História 2 (relacionada ao RF-05)**
+**História 3 (relacionada ao RF-05)**
 Como um usuário sem conhecimentos técnicos de eletricidade, eu quero descrever meu aparelho (ex: "geladeira antiga") e deixar que a IA estime o gasto, para que eu não precise procurar etiquetas técnicas ou manuais complexos.
  
-**História 3 (relacionada ao RF-08)**
+**História 4 (relacionada ao RF-08)**
 Como um consumidor consciente financeiramente, eu quero simular se vale a pena comprar um aparelho novo com selo Procel A, para que eu saiba em quantos meses a economia na conta de luz pagará o investimento.
  
 ---
