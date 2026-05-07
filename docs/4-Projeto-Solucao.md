@@ -45,27 +45,39 @@ Cada Wireframe ou Mockups devem estar associados a pelo menos:
 - Uma História de Usuário
 
 
-## 📌 Exemplo Ilustrativo – Tela de Cadastro (RF-01)
+## 📌 Tela de Cadastro (RF-01)
 
-**História associada:** Como usuário, quero criar uma conta para acessar o sistema.
+**História 1 (relacionada ao RF-01)**: Como usuário doméstico, eu quero criar uma conta e acessar o sistema com segurança, para que meus dados de consumo e aparelhos cadastrados não sejam perdidos e fiquem protegidos.
 
-Representação simplificada do Wireframe:
+<img src="images/cadastro.png" width="80%">
 
-<img src="images/TelaCadastro.png" width="80%">
+**Descrição:** A interface contempla a história de usuário, permitindo que os usuários se cadastrem na plataforma através de uma interface intuitiva e com validação da autenticação.
 
-**Descrição:** A interface contempla todos os campos exigidos pelo RF-01 e permite persistência no banco após validação no backend.
+## 📌 Tela de Login (RF-01)
 
----
-🔧 **Ferramentas sugeridas:**
-- Figma  
-- MarvelApp  
-- Balsamiq  
----
+**História 1 (relacionada ao RF-01)**: Como usuário doméstico, eu quero criar uma conta e acessar o sistema com segurança, para que meus dados de consumo e aparelhos cadastrados não sejam perdidos e fiquem protegidos.
 
-### 📎 Inserir AQUI Wireframes/ Mockups do Projeto de Software
+<img src="images/login.png" width="80%">
 
-🚨 O grupo deverá inserir aqui a imagem
+**Descrição:** A interface contempla a história de usuário, permitindo o acesso à plataforma e validando somente autenticações com registro prévio.
 
+## 📌 Tela de Cadastro (RF-02)
+
+**História 2 (relacionada ao RF-01)**: Como usuário doméstico, quero cadastrar e gerenciar meus dispositivos elétricos no sistema de forma simples e intuitiva, para que eu possa registrar as informações necessárias com clareza e sem dificuldades, e assim ter acesso aos recursos disponíveis na plataforma, como o cálculo do consumo energético dos meus dispositivos.
+
+
+<img src="images/cadastro_dispositivo.png" width="80%">
+
+**Descrição:** A interface contempla a história de usuário, permitindo que o usuário cadastre o dispositivo com as principais informações que serão utilizadas para o cálculo.
+
+## 📌 Tela de Cadastro (RF-02)
+
+**História 2 (relacionada ao RF-01)**: Como usuário doméstico, quero cadastrar e gerenciar meus dispositivos elétricos no sistema de forma simples e intuitiva, para que eu possa registrar as informações necessárias com clareza e sem dificuldades, e assim ter acesso aos recursos disponíveis na plataforma, como o cálculo do consumo energético dos meus dispositivos.
+
+
+<img src="images/lista_dispositivos.png" width="80%">
+
+**Descrição:** A interface contempla a história de usuário, permitindo que o usuário acesse os dispositvos cadastrados, permitindo funções como edição, filtragem e acesso aos impactos do aparelho doméstico.
 
 
 ---
