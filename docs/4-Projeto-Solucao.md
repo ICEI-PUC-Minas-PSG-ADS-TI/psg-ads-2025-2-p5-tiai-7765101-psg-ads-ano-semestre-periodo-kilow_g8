@@ -61,12 +61,12 @@ Cada Wireframe ou Mockups devem estar associados a pelo menos:
 
 **Descrição:** A interface contempla a história de usuário, permitindo o acesso à plataforma e validando somente autenticações com registro prévio.
 
-## 📌 Tel Cadastro do Dispositivo (RF-02)
+## 📌 Tela Cadastro do Dispositivo (RF-02)
 
 **História 2 (relacionada ao RF-01)**: Como usuário doméstico, quero cadastrar e gerenciar meus dispositivos elétricos no sistema de forma simples e intuitiva, para que eu possa registrar as informações necessárias com clareza e sem dificuldades, e assim ter acesso aos recursos disponíveis na plataforma, como o cálculo do consumo energético dos meus dispositivos.
 
 
-<img src="images/cadastro_dispositivo.png" width="80%">
+<img src="images/telaCadastroDispositivo.png" width="80%">
 
 **Descrição:** A interface contempla a história de usuário, permitindo que o usuário cadastre o dispositivo com as principais informações que serão utilizadas para o cálculo.
 
