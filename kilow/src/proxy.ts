@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 export function proxy(request: NextRequest) {
-  const publicRoutes = ['/login', '/register'];
+  const publicRoutes = ['/login', '/register', '/deviceRegister', '/deviceList'];
   const isPublicRoute = publicRoutes.includes(request.nextUrl.pathname);
 
   const token = request.cookies.get('auth-token')?.value;

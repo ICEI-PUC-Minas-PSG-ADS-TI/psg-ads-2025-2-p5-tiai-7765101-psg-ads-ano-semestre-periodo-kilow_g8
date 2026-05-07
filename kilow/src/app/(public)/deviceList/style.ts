@@ -21,13 +21,13 @@ export const DivExtendDevice = styled.div`
     margin: 15px;
 `;
 
-export const button = styled.button`
+// style.ts
+export const ButtonFilter = styled.button`
     color: #358739;
     border: 2px solid #358739;
     background-color: #97E69B;
     border-radius: 100px;
 `;
-
 
 
 

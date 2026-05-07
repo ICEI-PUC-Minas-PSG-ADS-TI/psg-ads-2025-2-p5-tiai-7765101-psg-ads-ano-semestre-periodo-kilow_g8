@@ -12,9 +12,10 @@ interface OptionType {
 interface AnimatedMultiProps {
   data: OptionType[];
   label: string;
+  onChange?: (values: string[]) => void; // ← adicionado
 }
 
-export default function AnimatedMulti({ data, label }: AnimatedMultiProps) {
+export default function AnimatedMulti({ data, label, onChange }: AnimatedMultiProps) {
   const defaultValues = data.filter(
     option => option.value === "Segunda-feira" || option.value === "Sexta-feira"
   );
@@ -25,11 +26,14 @@ export default function AnimatedMulti({ data, label }: AnimatedMultiProps) {
       <Select
         closeMenuOnSelect={false}
         components={animatedComponents}
-        defaultValue={defaultValues} 
+        defaultValue={defaultValues}
         isMulti
         options={data}
         placeholder="Selecione os dias..."
         noOptionsMessage={() => "Nenhuma opção encontrada"}
+        onChange={(selected) =>
+          onChange?.(selected.map((opt) => opt.value)) // ← adicionado
+        }
       />
     </DivContainer>
   );

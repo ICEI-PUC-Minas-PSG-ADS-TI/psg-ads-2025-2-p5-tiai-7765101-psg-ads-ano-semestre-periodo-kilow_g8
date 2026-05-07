@@ -82,3 +82,47 @@ export const ContainerImage = styled.div`
     width: 760px;
     height: 50%;
 `;
+
+export const StyledButton = styled.button`
+  background-color: #2D5D7B;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  width: 100%;
+  margin-top: 16px;
+
+  &:hover {
+    background-color: #1a3a4f;
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    background-color: #9E9E9E;
+    cursor: not-allowed;
+    transform: none;
+  }
+`;
+
+export const SelectContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 10px;
+
+  /* Estilização da label que fica acima da lista */
+  label {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    color: #333;
+  }
+`;
