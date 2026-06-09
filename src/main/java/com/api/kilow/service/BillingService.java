@@ -8,6 +8,7 @@ import com.api.kilow.repository.BillingsRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class BillingService {
@@ -15,6 +16,8 @@ public class BillingService {
   @Autowired private BillingsRepository billingsRepository;
 
   @Autowired private LoggedUserService loggedUserService;
+
+  @Autowired private AiService aiService;
 
   public CreateBillingResponse createBilling(CreateBillingRequest requestDTO) {
     User loggedUser = loggedUserService.getUser();
@@ -95,6 +98,17 @@ public class BillingService {
         updatedBilling.getId(),
         updatedBilling.getMesReferencia(),
         updatedBilling.getAnoReferencia());
+  }
+
+  public CreateBillingRequest extractFromImage(MultipartFile file) throws Exception {
+    CreateBillingRequest extractData = aiService.extractBillingDataFromImage(file);
+
+    return new CreateBillingRequest(
+        getBillingNickname(extractData),
+        extractData.mesReferencia(),
+        extractData.anoReferencia(),
+        extractData.valorTotal(),
+        extractData.consumoTotalKwh());
   }
 
   private String getBillingNickname(CreateBillingRequest billingRequest) {
