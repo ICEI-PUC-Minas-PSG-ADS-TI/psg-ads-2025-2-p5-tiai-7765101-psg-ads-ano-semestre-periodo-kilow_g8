@@ -1,0 +1,18 @@
+# Ignorar pastas de dependências e build
+node_modules
+.next
+build
+dist
+out
+
+# Ignorar arquivos de log e sistema
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+.env
+.env.*
+
+# Ignorar arquivos de trava do gerenciador de pacotes
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
