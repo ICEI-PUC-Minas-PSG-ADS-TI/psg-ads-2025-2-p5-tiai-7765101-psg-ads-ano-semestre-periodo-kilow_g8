@@ -1,5 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 import { Toast } from '@base-ui/react/toast';
+import { colors } from '../theme';
 
 export const slideIn = keyframes`
   from { transform: translateX(100%); opacity: 0; }
@@ -29,8 +30,8 @@ export const StyledRoot = styled(Toast.Root)`
   background: white;
   border-radius: 12px;
   padding: 16px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border: 1px solid ${colors.lightGray};
+  box-shadow: 0 10px 15px -3px ${colors.lightGray}10;
 
   /* Animações */
   &[data-state='open'] {
@@ -44,13 +45,13 @@ export const StyledRoot = styled(Toast.Root)`
 export const StyledTitle = styled(Toast.Title)`
   font-weight: 600;
   font-size: 0.95rem;
-  color: #1a202c;
+  color: ${colors.darkBlue};
   margin-bottom: 4px;
 `;
 
 export const StyledDescription = styled(Toast.Description)`
   font-size: 0.875rem;
-  color: #718096;
+  color: ${colors.darkTextGray};
   margin: 0;
   display: flex;
 `;
@@ -58,7 +59,8 @@ export const StyledDescription = styled(Toast.Description)`
 export const StyledClose = styled(Toast.Close)`
   background: none;
   border: none;
-  color: #a0aec0;
+  height: 'auto',
+  color: ${colors.lightGray};
   cursor: pointer;
   padding: 4px;
   margin-left: 12px;
@@ -67,7 +69,7 @@ export const StyledClose = styled(Toast.Close)`
   transition: all 0.2s;
 
   &:hover {
-    background: #f7fafc;
-    color: #4a5568;
+    background: ${colors.backgroundWhite};
+    color: ${colors.darkGray};
   }
 `;

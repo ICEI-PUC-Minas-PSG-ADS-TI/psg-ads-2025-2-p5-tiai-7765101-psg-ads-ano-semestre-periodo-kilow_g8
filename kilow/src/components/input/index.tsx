@@ -1,8 +1,7 @@
-import { StyledText } from '@/app/(public)/text';
-import { InputStyle, PasswordVisibilityButton } from './styles';
+import { StyledText } from '@/components/text';
+import { InputContainer, InputStyle, PasswordVisibilityButton } from './styles';
 import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
-import { colors } from '../theme';
 
 export interface IStyledInput {
   value: string;
@@ -11,6 +10,7 @@ export interface IStyledInput {
   placeholder: string;
   label?: string;
   required?: boolean;
+  height?: number;
 }
 
 const StyledInput = ({
@@ -20,6 +20,7 @@ const StyledInput = ({
   placeholder,
   label,
   required,
+  height,
 }: IStyledInput) => {
   const [mostrarSenha, setMostrarSenha] = useState(false);
 
@@ -27,14 +28,7 @@ const StyledInput = ({
 
   const inputType = isPassword && mostrarSenha ? 'text' : type;
   return (
-    <div
-      style={{
-        gap: 12,
-        display: 'flex',
-        flexDirection: 'column',
-        position: 'relative',
-      }}
-    >
+    <InputContainer>
       {label && (
         <StyledText color="black" size={16} weight={400}>
           {label}
@@ -43,19 +37,22 @@ const StyledInput = ({
       )}
       <InputStyle
         type={inputType}
+        min={inputType === 'number' ? 2000 : undefined}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
+        height={height}
       />
       {isPassword && (
         <PasswordVisibilityButton
+          type="button"
           aria-label={mostrarSenha ? 'Ocultar senha' : 'Mostrar senha'}
           onClick={() => setMostrarSenha(!mostrarSenha)}
         >
           {mostrarSenha ? <EyeOff size={20} /> : <Eye size={20} />}
         </PasswordVisibilityButton>
       )}
-    </div>
+    </InputContainer>
   );
 };
 
