@@ -1,18 +1,8 @@
-import { StyledText } from '@/components/text';
+import { StyledText } from '@/app/(public)/text';
 import { colors } from '../theme';
 import Image from 'next/image';
-import { LinkRouteText, LinkRouteDiv, VerticalLine } from './style';
-import { usePathname } from 'next/navigation';
-import { APP_ROUTES } from '@/constants';
 
 const Header = () => {
-  const pathName = usePathname();
-  const headerLinks = [
-    APP_ROUTES.billings,
-    APP_ROUTES.devices,
-    APP_ROUTES.home,
-  ];
-
   return (
     <div
       style={{
@@ -41,7 +31,7 @@ const Header = () => {
       <div
         style={{
           width: '20%',
-          backgroundColor: colors.yellow,
+          backgroundColor: '#FFD23F',
           borderRadius: 100,
           height: 6,
           boxShadow: 'inset 0px 4px 4px #0000002c',
@@ -58,27 +48,32 @@ const Header = () => {
           gap: 12,
         }}
       >
-        {headerLinks.map((headerLink, index) => {
-          const isSelected = pathName.includes(headerLink.path);
-
-          const isLastIHeaderLink = index === headerLinks.length - 1;
-          return (
-            <>
-              <LinkRouteDiv href={headerLink.path} key={headerLink.path}>
-                <LinkRouteText
-                  color={isSelected ? 'yellow' : 'white'}
-                  weight={isSelected ? 700 : 400}
-                  size={16}
-                  isSelected={isSelected}
-                >
-                  {headerLink.label}
-                </LinkRouteText>
-              </LinkRouteDiv>
-
-              {!isLastIHeaderLink && <VerticalLine />}
-            </>
-          );
-        })}
+        <StyledText
+          color="white"
+          size={16}
+          weight={400}
+          style={{ padding: '8px 40px 8px 40px', cursor: 'pointer' }}
+        >
+          Contas
+        </StyledText>
+        <div
+          style={{
+            width: 1,
+            backgroundColor: colors.white,
+            borderRadius: 100,
+            height: '3.5vh',
+          }}
+        >
+          {' '}
+        </div>
+        <StyledText
+          color="white"
+          size={16}
+          weight={400}
+          style={{ padding: '8px 40px 8px 40px', cursor: 'pointer' }}
+        >
+          Dispositivos
+        </StyledText>
       </div>
     </div>
   );
