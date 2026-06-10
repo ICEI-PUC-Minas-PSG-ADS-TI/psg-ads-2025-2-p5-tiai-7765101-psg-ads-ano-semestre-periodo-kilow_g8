@@ -1,197 +1,52 @@
 'use client';
-import { loginAction } from '@/actions/auth';
-import { Toast } from '@base-ui/react';
-import { useState } from 'react';
+
 import { useRouter } from 'next/navigation';
-import MiniIdeaLoader from '@/components/loading';
-import Image from 'next/image';
+import AuthLayout from '@/components/Layout/authPages';
 import StyledInput from '@/components/input';
-import { colors } from '@/components/theme';
-import { StyledText } from '../text';
+import Button from '@/components/button';
+import { StyledText } from '@/components/text';
+
+import { useLogin } from '@/hooks/useLogin';
+import {
+  FormWrapper,
+  DecorativeImage,
+  ContentContainer,
+  FormContainer,
+  Divider,
+  FooterText,
+} from '@/components/Layout/authPages/style';
 
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
-
+  const { email, setEmail, senha, setSenha, handleLogin } = useLogin();
   const router = useRouter();
-  const toastManager = Toast.useToastManager();
-
-  const handleSubmit = async () => {
-    if (!email || !senha) {
-      toastManager.add({
-        title: 'Erro',
-        description: 'Preencha todos os campos e tente novamente ;)',
-      });
-      return;
-    }
-
-    toastManager.add({
-      title: 'Carregando',
-      description: (
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-          <p>
-            Aguarde mais alguns instantes que estamos terminando de validar os
-            dados para você ;)
-          </p>
-          <MiniIdeaLoader />
-        </div>
-      ),
-    });
-    try {
-      const response = await loginAction({ email, senha });
-
-      toastManager.add({
-        title: response.message.title,
-        description: response.message.description,
-      });
-
-      if (response.success) router.replace('/home');
-    } catch {
-      toastManager.add({
-        title: 'Ops... algo saiu errado!',
-        description:
-          'Parece que algo saiu errado :( Tente novamente mais tarde',
-      });
-    } finally {
-      clearFields();
-    }
-  };
-
-  const clearFields = () => {
-    setEmail('');
-    setSenha('');
-  };
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', width: '100vw' }}>
-      <div
-        style={{
-          width: '35%',
-          backgroundColor: '#2D5D7B',
-          padding: 48,
-          gap: 48,
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <div>
-          <div
-            style={{
-              width: '60%',
-              backgroundColor: '#FFD23F',
-              borderRadius: 100,
-              height: 8,
-              marginLeft: 220,
-            }}
-          >
-            {' '}
-          </div>
+    <AuthLayout
+      bannerImageSrc="/assets/loginPageImage.png"
+      bannerPosition="left"
+      bannerText="Pronto para economizar na sua conta de luz?"
+    >
+      <FormWrapper>
+        <DecorativeImage src="/assets/loginImage2.png" alt="Decoração" />
 
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 24,
-              justifyContent: 'center',
-            }}
-          >
-            <StyledText color="yellow" size={76} weight={600}>
-              KiloW
-            </StyledText>
-            <Image
-              src="/assets/Greentech.png"
-              alt="icone"
-              width={75}
-              height={77}
-            />
-          </div>
-
-          <div
-            style={{
-              width: '60%',
-              backgroundColor: '#FFD23F',
-              borderRadius: 100,
-              height: 8,
-              marginLeft: -28,
-            }}
-          >
-            {' '}
-          </div>
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <StyledText
-            color="white"
-            size={28}
-            weight={350}
-            maxWidth={360}
-            textAlign="right"
-          >
-            Pronto para economizar na sua conta de luz?
-          </StyledText>
-        </div>
-        <img
-          src={'/assets/loginPageImage.png'}
-          alt="loginImagePage"
-          width="100%"
-        />
-      </div>
-
-      <div
-        style={{
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          position: 'relative',
-        }}
-      >
-        <img
-          src={'/assets/loginImage2.png'}
-          style={{
-            position: 'absolute',
-            right: '5%',
-            top: 0,
-            width: '40%',
-            zIndex: -1,
-          }}
-        />
-        <div
-          style={{
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '24px',
-            marginLeft: '120px',
-          }}
-        >
-          <div>
+        <ContentContainer>
+          <header>
             <StyledText size={36} weight={650} color="darkBlue">
               Faça login
             </StyledText>
             <StyledText size={20} weight={400} color="darkBlue">
               Insira seus dados
             </StyledText>
-          </div>
-          <div
-            style={{
-              maxWidth: '50%',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '24px',
-            }}
-          >
+          </header>
+
+          <FormContainer onSubmit={handleLogin}>
             <StyledInput
               value={email}
               onChange={setEmail}
               placeholder="Email"
               type="email"
             />
+
             <StyledInput
               value={senha}
               onChange={setSenha}
@@ -199,44 +54,23 @@ const LoginPage = () => {
               type="password"
             />
 
-            <button
-              onClick={handleSubmit}
-              style={{
-                backgroundColor: colors.darkBlue,
-                color: colors.yellow,
-                fontSize: 28,
-                padding: 8,
-                borderRadius: 12,
-                border: 0,
-                marginBlock: 12,
-              }}
-            >
+            <Button type="submit" variant="darkBlue" size="large">
               Entrar
-            </button>
-            <div
-              style={{
-                backgroundColor: '#1E392A',
-                height: 1,
-              }}
-            />
-            <p style={{ textAlign: 'center' }}>
+            </Button>
+
+            <Divider />
+
+            <FooterText>
               Ainda não tem uma conta?{' '}
-              <span
-                onClick={() => router.push('/register')}
-                style={{
-                  cursor: 'pointer',
-                  color: '#2D5D7B',
-                  fontWeight: 'bold',
-                }}
-              >
+              <span onClick={() => router.push('/register')}>
                 Cadastre-se aqui
               </span>{' '}
               e junte-se a nós!
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
+            </FooterText>
+          </FormContainer>
+        </ContentContainer>
+      </FormWrapper>
+    </AuthLayout>
   );
 };
 
