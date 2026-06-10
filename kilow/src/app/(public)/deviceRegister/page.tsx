@@ -1,203 +1,204 @@
-// "use client";
+'use client';
 
-// import { useState } from 'react';
-// import CustomInput from '@/components/writingInput';
-// import ListSelect from '@/components/selectCategories';
-// import Header from '@/components/header';
-// import DescriptionPage from '@/components/descriptionPage';
-// import { createDeviceAction } from '@/actions/device';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Header from '@/components/header';
+import Button from '@/components/button';
+import CardDevice from '@/components/cardDevice/index';
 
-// // Importando os componentes estilizados novos e os existentes
-// import {
-//     DivContainer,
-//     ContainerRegister,
-//     ContainerTitle,
-//     Text,
-//     ContainerSectionOne,
-//     ContainerSectionTwo,
-//     ContainerImage,
-//     StyledButton,    // Novo
-//     SelectContainer  // Novo
-// } from './style';
+import {
+  PageWrapper,
+  PageTitle,
+  PageSubtitle,
+  ContentGrid,
+  LeftColumn,
+  RightColumn,
+  FormCard,
+  FormGroup,
+  FormLabel,
+  FormInput,
+  FormSelect,
+  FormRow,
+  FormHint,
+  PreviewCard,
+  PreviewTitle,
+  PreviewWrapper,
+  FooterRow,
+} from './style';
 
-// interface HandleChange {
-//     event: React.ChangeEvent<HTMLInputElement>;
-//     fieldId: number;
-// }
+const CATEGORIES = [
+  'Computadores',
+  'Climatização',
+  'Monitores',
+  'Áudio',
+  'Redes',
+];
 
-// // MOCK - remover quando o back estiver disponível
-// const mockDevices = [
-//     { id: 1, nome: "TV da Sala", consumoWatts: 100, usoMinutosHorasDia: 120, usoDiasSemana: 5, consumoMensalKwh: 10 },
-//     { id: 2, nome: "Ar Condicionado", consumoWatts: 1500, usoMinutosHorasDia: 240, usoDiasSemana: 7, consumoMensalKwh: 180 },
-//     { id: 3, nome: "Geladeira", consumoWatts: 150, usoMinutosHorasDia: 1440, usoDiasSemana: 7, consumoMensalKwh: 45 },
-// ];
-// const USE_MOCK = true;
+const RATE_PER_KWH = 0.75;
 
-// export default function RegisterDevice() {
-//     const [name, setName] = useState("");
-//     const [dailyConsumption, setDailyConsumption] = useState("");
-//     const [watts, setWatts] = useState("");
-//     const [selectedDays, setSelectedDays] = useState<string[]>(["Segunda-feira", "Sexta-feira"]);
-//     const [loading, setLoading] = useState(false);
-//     const [message, setMessage] = useState<{ title: string; description: string } | null>(null);
-//     const [success, setSuccess] = useState(false);
+interface FormState {
+  nome: string;
+  categoria: string;
+  consumoWatts: string;
+  usoHorasDia: string;
+  usoDiasSemana: string;
+}
 
-//     const options = [
-//         { label: "Segunda-feira", value: "Segunda-feira" },
-//         { label: "Terça-feira", value: "Terça-feira" },
-//         { label: "Quarta-feira", value: "Quarta-feira" },
-//         { label: "Quinta-feira", value: "Quinta-feira" },
-//         { label: "Sexta-feira", value: "Sexta-feira" },
-//         { label: "Sábado", value: "Sábado" },
-//         { label: "Domingo", value: "Domingo" }
-//     ];
+const initialForm: FormState = {
+  nome: '',
+  categoria: '',
+  consumoWatts: '',
+  usoHorasDia: '',
+  usoDiasSemana: '',
+};
 
-//     const handleChange = ({ event, fieldId }: HandleChange) => {
-//         const newValue = event.target.value;
-//         switch (fieldId) {
-//             case 1: setName(newValue); break;
-//             case 2: setDailyConsumption(newValue); break;
-//             case 3: setWatts(newValue); break;
-//         }
-//     };
+export default function CadastroDispositivo() {
+  const router = useRouter();
+  const [form, setForm] = useState<FormState>(initialForm);
 
-//     const handleSubmit = async () => {
-//         setMessage(null);
-//         setSuccess(false);
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
-//         if (!name || !dailyConsumption || !watts || selectedDays.length === 0) {
-//             setMessage({ title: "Atenção", description: "Preencha todos os campos obrigatórios." });
-//             return;
-//         }
+  const isFormValid =
+    form.nome.trim() !== '' &&
+    form.categoria !== '' &&
+    Number(form.consumoWatts) > 0 &&
+    Number(form.usoHorasDia) > 0 &&
+    Number(form.usoDiasSemana) > 0;
 
-//         const usoMinutosHorasDia = Number(dailyConsumption);
-//         const consumoWatts = Number(watts);
+  const handleSave = () => {
+    // TODO: conectar com a action de criação de dispositivo
+    console.log('Salvar dispositivo:', form);
+  };
 
-//         if (isNaN(usoMinutosHorasDia) || isNaN(consumoWatts)) {
-//             setMessage({ title: "Atenção", description: "Consumo diário e potência devem ser números." });
-//             return;
-//         }
+  // Valores para o preview — usa fallback para não quebrar o card enquanto digita
+  const previewName     = form.nome.trim()           || 'Novo dispositivo';
+  const previewCategory = form.categoria             || 'Computadores';
+  const previewPower    = Number(form.consumoWatts)  || 0;
+  const previewHours    = Number(form.usoHorasDia)   || 0;
+  const previewDays     = Number(form.usoDiasSemana) || 0;
 
-//         setLoading(true);
+  return (
+    <PageWrapper>
+      <Header />
 
-//         if (USE_MOCK) {
-//             await new Promise((resolve) => setTimeout(resolve, 800));
-//             mockDevices.push({
-//                 id: mockDevices.length + 1,
-//                 nome: name,
-//                 consumoWatts,
-//                 usoMinutosHorasDia,
-//                 usoDiasSemana: selectedDays.length,
-//                 consumoMensalKwh: parseFloat(((consumoWatts * usoMinutosHorasDia / 60 * selectedDays.length * 4) / 1000).toFixed(2)),
-//             });
-//             setLoading(false);
-//             setSuccess(true);
-//             setMessage({ title: "Sucesso", description: "Dispositivo cadastrado com sucesso!" });
-//             setName("");
-//             setDailyConsumption("");
-//             setWatts("");
-//             setSelectedDays([]);
-//             return;
-//         }
+      <PageTitle>Novo dispositivo</PageTitle>
+      <PageSubtitle>
+        Preencha os dados do aparelho para calcular seu consumo e custo mensal
+      </PageSubtitle>
 
-//         const result = await createDeviceAction({
-//             nome: name,
-//             usoMinutosHorasDia,
-//             usoDiasSemana: selectedDays.length,
-//             consumoWatts,
-//         });
-        
-//         setLoading(false);
-//         setMessage(result.message);
-//         setSuccess(result.success ?? false);
+      <ContentGrid>
+        {/* ── Coluna esquerda: formulário ── */}
+        <LeftColumn>
+          <FormCard>
+            {/* Nome */}
+            <FormGroup>
+              <FormLabel htmlFor="nome">Nome do dispositivo</FormLabel>
+              <FormInput
+                id="nome"
+                name="nome"
+                type="text"
+                placeholder="Ex: PC Desktop, Geladeira, Ar-condicionado..."
+                value={form.nome}
+                onChange={handleChange}
+              />
+            </FormGroup>
 
-//         if (result.success) {
-//             setName("");
-//             setDailyConsumption("");
-//             setWatts("");
-//             setSelectedDays([]);
-//         }
-//     };
+            {/* Categoria */}
+            <FormGroup>
+              <FormLabel htmlFor="categoria">Categoria</FormLabel>
+              <FormSelect
+                id="categoria"
+                name="categoria"
+                value={form.categoria}
+                onChange={handleChange}
+              >
+                <option value="" disabled>
+                  Selecione uma categoria
+                </option>
+                {CATEGORIES.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </FormSelect>
+            </FormGroup>
 
-//     return (
-//         <DivContainer>
-//             <Header />
-            
-//             <ContainerTitle>
-//                 <DescriptionPage
-//                     title="Cadastre seu dispositivo!"
-//                     subtitle="Preencha todos os campos solicitados e aguarde para uma futura análise"
-//                 />
-//             </ContainerTitle>
+            {/* Potência */}
+            <FormGroup>
+              <FormLabel htmlFor="consumoWatts">Potência (W)</FormLabel>
+              <FormInput
+                id="consumoWatts"
+                name="consumoWatts"
+                type="number"
+                min="1"
+                placeholder="Ex: 300"
+                value={form.consumoWatts}
+                onChange={handleChange}
+              />
+              <FormHint>
+                Geralmente indicado na etiqueta ou manual do aparelho
+              </FormHint>
+            </FormGroup>
 
-//             <ContainerRegister>
-//                 {/* LADO ESQUERDO: FORMULÁRIO */}
-//                 <ContainerSectionOne>
-//                     <CustomInput
-//                         label="Nome do aparelho *"
-//                         type="text"
-//                         value={name}
-//                         placeholder='Ex: Tv da Sala'
-//                         onChange={(e) => handleChange({ event: e, fieldId: 1 })} 
-//                     />
-                    
-//                     <CustomInput
-//                         label="Consumo diário (minutos) *"
-//                         type="number"
-//                         value={dailyConsumption}
-//                         placeholder='Ex: 90'
-//                         onChange={(e) => handleChange({ event: e, fieldId: 2 })} 
-//                     />
-                    
-//                     <CustomInput
-//                         label="Potência (W) *"
-//                         type="number"
-//                         value={watts}
-//                         placeholder='Ex: 100'
-//                         onChange={(e) => handleChange({ event: e, fieldId: 3 })} 
-//                     />
+            {/* Uso diário + dias por semana lado a lado */}
+            <FormRow>
+              <FormGroup>
+                <FormLabel htmlFor="usoHorasDia">Horas de uso por dia</FormLabel>
+                <FormInput
+                  id="usoHorasDia"
+                  name="usoHorasDia"
+                  type="number"
+                  min="1"
+                  max="24"
+                  placeholder="Ex: 8"
+                  value={form.usoHorasDia}
+                  onChange={handleChange}
+                />
+              </FormGroup>
 
-//                     <SelectContainer>
-//                         <ListSelect
-//                             data={options}
-//                             label="Consumo semanal (dias) *"
-//                             onChange={(values) => setSelectedDays(values)}
-//                         />
-//                     </SelectContainer>
+              <FormGroup>
+                <FormLabel htmlFor="usoDiasSemana">Dias de uso por semana</FormLabel>
+                <FormInput
+                  id="usoDiasSemana"
+                  name="usoDiasSemana"
+                  type="number"
+                  min="1"
+                  max="7"
+                  placeholder="Ex: 5"
+                  value={form.usoDiasSemana}
+                  onChange={handleChange}
+                />
+              </FormGroup>
+            </FormRow>
+          </FormCard>
 
-//                     {message && (
-//                         <p style={{ 
-//                             marginTop: "8px", 
-//                             color: success ? "#2e7d32" : "#d32f2f",
-//                             fontWeight: "500" 
-//                         }}>
-//                             <strong>{message.title}:</strong> {message.description}
-//                         </p>
-//                     )}
+          <FooterRow>
+            <Button isEnabled={true} handleClick={() => router.back()} text="Cancelar" />
+            <Button isEnabled={isFormValid} handleClick={handleSave} text="Salvar dispositivo" />
+          </FooterRow>
+        </LeftColumn>
 
-//                     <StyledButton onClick={handleSubmit} disabled={loading}>
-//                         {loading ? "Cadastrando..." : "Cadastrar"}
-//                     </StyledButton>
-//                 </ContainerSectionOne>
-
-//                 {/* LADO DIREITO: IMAGEM/BANNER */}
-//                 <ContainerSectionTwo>
-//                     <ContainerImage>
-//                         <Text>Novidades em breve!</Text>
-//                         <img 
-//                             src="/assets/image-register-device.png" 
-//                             alt="Ilustração de Registro"
-//                             style={{ maxWidth: '100%', height: 'auto', objectFit: 'contain' }}
-//                         />
-//                     </ContainerImage>
-//                 </ContainerSectionTwo>
-//             </ContainerRegister>
-//         </DivContainer>
-//     );
-// }
-
-export default function Teste() {
-    return(
-        <div> Olá </div>
-    )
+        {/* ── Coluna direita: preview em tempo real ── */}
+        <RightColumn>
+          <PreviewCard>
+            <PreviewTitle>Pré-visualização</PreviewTitle>
+            <PreviewWrapper>
+              <CardDevice
+                name={previewName}
+                category={previewCategory}
+                power={previewPower}
+                hoursPerDay={previewHours}
+                daysPerWeek={previewDays}
+                costPerKwh={RATE_PER_KWH}
+              />
+            </PreviewWrapper>
+          </PreviewCard>
+        </RightColumn>
+      </ContentGrid>
+    </PageWrapper>
+  );
 }
