@@ -1,74 +1,92 @@
-import React from 'react';
-import {Container, DivNome, DivCategoria, Texto, DivCadastro, DivCusto
-} from "./style"
+'use client';
 
-//Finalizar esses componentes
-//Adicionar outros componentes para completar a página
+import {
+  Container,
+  AvatarBox,
+  AvatarText,
+  DeviceName,
+  CategoryLabel,
+  BadgesRow,
+  Badge,
+  CostLabel,
+} from './style';
 
-function CardDevice() {
-  const dispositivos = ['PC Desktop', 'Ar-Condicionado', 'Monitor'];
-  const palavra = dispositivos[0];
-  const palavraEncurtada = palavra
+interface CardDeviceProps {
+  name: string;
+  category: string;
+  power: number;       // em Watts
+  hoursPerDay: number; // horas por dia
+  daysPerWeek: number; // dias por semana (exibido como "X dias")
+  costPerKwh?: number; // tarifa R$/kWh (padrão 0.75)
+}
+
+/** Retorna as iniciais de até 2 palavras do nome */
+function getInitials(name: string): string {
+  return name
     .split(' ')
-    .map((palavra) => palavra.charAt(0).toUpperCase())
+    .slice(0, 2)
+    .map((w) => w.charAt(0).toUpperCase())
     .join('');
+}
 
-  function CustoTotal({valorContaDeEnergia}: valorContaDeEnergia) {
-    const potencia = 3;
-    const horasDiarias = 8;
-    const dias = 5;
-    let h = horasDiarias * dias;
-    let consumoMensalEmWatt = potencia * h;
-    let valorConvertidoParaWhats = consumoMensalEmWatt / 1000;
-    let custoTotal = valorConvertidoParaWhats * valorContaDeEnergia;
-    console.log(custoTotal);
-    return custoTotal;
-  }
+/** Paleta de cores por categoria */
+const categoryColors: Record<string, string> = {
+  Computadores: '#3b5bdb',
+  Climatização: '#1098ad',
+  Monitores: '#0ca678',
+  Monitores2: '#37b24d',
+  Áudio: '#f76707',
+  Redes: '#d6336c',
+};
 
-  interface valorContaDeEnergia {
-    valorContaDeEnergia: number;
-  }
-  
-    const categories = [
-        "Computadores",
-        "Climatização",
-        "Monitores",
-        "Áudio",
-        "Redes"
-    ]
+function getAvatarColor(category: string): string {
+  return categoryColors[category] ?? '#868e96';
+}
+
+/** Calcula custo mensal em R$ */
+function calcMonthlyCost(
+  watts: number,
+  hoursPerDay: number,
+  daysPerWeek: number,
+  ratePerKwh: number,
+): number {
+  const weeksPerMonth = 4.33;
+  const kwhPerMonth = (watts / 1000) * hoursPerDay * daysPerWeek * weeksPerMonth;
+  return kwhPerMonth * ratePerKwh;
+}
+
+export default function CardDevice({
+  name,
+  category,
+  power,
+  hoursPerDay,
+  daysPerWeek,
+  costPerKwh = 0.75,
+}: CardDeviceProps) {
+  const initials = getInitials(name);
+  const avatarColor = getAvatarColor(category);
+  const monthlyCost = calcMonthlyCost(power, hoursPerDay, daysPerWeek, costPerKwh);
+  const costFormatted = monthlyCost.toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  });
 
   return (
     <Container>
-      {/* Nome  */}
-      <DivNome>
-        <p> {palavraEncurtada} </p>
-      </DivNome>
+      <AvatarBox $color={avatarColor}>
+        <AvatarText>{initials}</AvatarText>
+      </AvatarBox>
 
-      {/* Categorias */}
-      <DivCategoria>
-        <p style={{ color: '#2f4f4f' }}> {categories[0]} </p>
-      </DivCategoria>
-      {/* Dados do cadastro */}
-      <DivCadastro>
-        <Texto>
-          300W(P)
-        </Texto>
-        <Texto>
-          3h/dia(Consumo diário)
-        </Texto>
-        <Texto>
-          5 dias(Dias)
-        </Texto>
-      </DivCadastro>
+      <DeviceName>{name}</DeviceName>
+      <CategoryLabel>{category}</CategoryLabel>
 
-      {/* Custo Total */}
-      <DivCusto
-        style={{ }}
-      >
-        <p> {CustoTotal(3)}</p>
-      </DivCusto>
+      <BadgesRow>
+        <Badge>{power}W</Badge>
+        <Badge>{hoursPerDay}h/dia</Badge>
+        <Badge>{daysPerWeek} dias</Badge>
+      </BadgesRow>
+
+      <CostLabel>{costFormatted}/mês</CostLabel>
     </Container>
   );
 }
-
-export default CardDevice;

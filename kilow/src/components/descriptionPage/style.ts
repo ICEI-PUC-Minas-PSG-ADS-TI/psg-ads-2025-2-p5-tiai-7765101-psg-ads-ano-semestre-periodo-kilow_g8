@@ -6,7 +6,7 @@ export const Container = styled.div`
   border-radius: 5px;
   margin-bottom: 5px;
   padding: 10px 20px;
-  width: 100%;
+  width: 70%;
 `;
 
 export const DivTitle = styled.div`
