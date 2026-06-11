@@ -177,7 +177,7 @@ export default function CadastroDispositivo() {
           </FormCard>
 
           <FooterRow>
-            <Button isEnabled={true} handleClick={() => router.back()} text="Cancelar" />
+            <Button isEnabled={true} handleClick={() => router.push('/deviceList')} text="Cancelar" />
             <Button isEnabled={isFormValid} handleClick={handleSave} text="Salvar dispositivo" />
           </FooterRow>
         </LeftColumn>

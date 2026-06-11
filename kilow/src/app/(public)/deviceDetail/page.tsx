@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Header from '@/components/header';
 import Button from '@/components/button';
 
@@ -43,122 +43,124 @@ import {
 } from './stye';
 
 // MOCK — remover quando o back estiver disponível
-const mockDevice = {
-  id: 1,
-  nome: 'PC Desktop',
-  categoria: 'Computadores',
-  consumoWatts: 300,
-  usoHorasDia: 8,
-  usoDiasSemana: 5,
-  cadastradoEm: '10/03/2025',
-  maiorConsumidor: true,
-  tarifaKwh: 0.78,
-  avatarColor: '#3b5bdb',
-};
-
-const mockCosts = {
-  porDia: 1.79,
-  porMes: 37.44,
-  porAno: 449.28,
-  tarifaReferencia: 'R$ 0,78/kWh (mar/2025)',
-};
-
-const mockImpact = [
-  { icon: '🌿', value: '3,92 kg CO₂', description: 'emissões mensais estimadas (SIN)' },
-  { icon: '🚗', value: '23 km de carro', description: 'equivalente em emissões mensais' },
-  { icon: '🌳', value: '0,2 árvore', description: 'necessária para compensar/mês' },
+const mockDevices = [
+  { id: 1, nome: 'PC Desktop',     categoria: 'Computadores', consumoWatts: 300, usoHorasDia: 8,  usoDiasSemana: 5, cadastradoEm: '10/03/2025', maiorConsumidor: true,  avatarColor: '#3b5bdb' },
+  { id: 2, nome: 'Ar-cond. Split', categoria: 'Climatização', consumoWatts: 750, usoHorasDia: 3,  usoDiasSemana: 5, cadastradoEm: '10/03/2025', maiorConsumidor: false, avatarColor: '#1098ad' },
+  { id: 3, nome: 'Monitor LG 27"', categoria: 'Monitores',    consumoWatts: 65,  usoHorasDia: 8,  usoDiasSemana: 5, cadastradoEm: '11/03/2025', maiorConsumidor: false, avatarColor: '#0ca678' },
+  { id: 4, nome: 'Notebook Dell',  categoria: 'Computadores', consumoWatts: 45,  usoHorasDia: 8,  usoDiasSemana: 5, cadastradoEm: '11/03/2025', maiorConsumidor: false, avatarColor: '#3b5bdb' },
+  { id: 5, nome: 'Roteador WiFi',  categoria: 'Redes',        consumoWatts: 8,   usoHorasDia: 24, usoDiasSemana: 7, cadastradoEm: '12/03/2025', maiorConsumidor: false, avatarColor: '#d6336c' },
+  { id: 6, nome: 'Caixa de som',   categoria: 'Áudio',        consumoWatts: 20,  usoHorasDia: 4,  usoDiasSemana: 5, cadastradoEm: '12/03/2025', maiorConsumidor: false, avatarColor: '#f76707' },
 ];
 
-const mockTip =
-  'Habilitar suspensão após 10 min de inatividade pode reduzir o consumo em até 15%, economizando R$ 5,60/mês.';
+const RATE_PER_KWH = 0.78;
+const WEEKS_PER_MONTH = 4.33;
+
+const mockImpact = [
+  { icon: '🌿', value: '3,92 kg CO₂',     description: 'emissões mensais estimadas (SIN)' },
+  { icon: '🚗', value: '23 km de carro',   description: 'equivalente em emissões mensais'  },
+  { icon: '🌳', value: '0,2 árvore',       description: 'necessária para compensar/mês'    },
+];
 
 function getInitials(name: string): string {
-  return name
-    .split(' ')
-    .slice(0, 2)
-    .map((w) => w.charAt(0).toUpperCase())
-    .join('');
+  return name.split(' ').slice(0, 2).map((w) => w.charAt(0).toUpperCase()).join('');
 }
 
 export default function DeviceDetail() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Lê o id da query: /deviceDetail?id=1
+  const idParam = searchParams.get('id');
+  const device = mockDevices.find((d) => d.id === Number(idParam)) ?? mockDevices[0];
+
+  const kwhMonth  = (device.consumoWatts / 1000) * device.usoHorasDia * device.usoDiasSemana * WEEKS_PER_MONTH;
+  const costDay   = (kwhMonth / 30) * RATE_PER_KWH;
+  const costMonth = kwhMonth * RATE_PER_KWH;
+  const costYear  = costMonth * 12;
+
+  const fmt = (v: number) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
   return (
     <PageWrapper>
       <Header />
 
       <ContentGrid>
-        {/* Coluna esquerda */}
+        {/* ── Coluna esquerda ── */}
         <LeftColumn>
-          {/* Card principal do dispositivo */}
           <DeviceCard>
             <DeviceTopRow>
-              <AvatarBox $color={mockDevice.avatarColor}>
-                <AvatarText>{getInitials(mockDevice.nome)}</AvatarText>
+              <AvatarBox $color={device.avatarColor}>
+                <AvatarText>{getInitials(device.nome)}</AvatarText>
               </AvatarBox>
+
               <DeviceInfo>
-                <DeviceName>{mockDevice.nome}</DeviceName>
+                <DeviceName>{device.nome}</DeviceName>
                 <DeviceMeta>
-                  {mockDevice.categoria} · Cadastrado {mockDevice.cadastradoEm}
+                  {device.categoria} · Cadastrado {device.cadastradoEm}
                 </DeviceMeta>
-                {mockDevice.maiorConsumidor && (
+                {device.maiorConsumidor && (
                   <DeviceBadge>Maior consumidor</DeviceBadge>
                 )}
               </DeviceInfo>
+
               <ActionRow>
-                <Button isEnabled={true} handleClick={() => {}} text="Editar" />
-                <Button isEnabled={true} handleClick={() => router.back()} text="Excluir" />
+                {/* Editar → deviceRegister com o id para pré-preencher o form */}
+                <Button
+                  isEnabled={true}
+                  handleClick={() => router.push(`/deviceRegister?id=${device.id}`)}
+                  text="Editar"
+                />
+                {/* Voltar para a listagem */}
+                <Button
+                  isEnabled={true}
+                  handleClick={() => router.push('/deviceList')}
+                  text="Voltar"
+                />
               </ActionRow>
             </DeviceTopRow>
 
             <BadgesRow>
               <StatBadge>
-                <StatValue>{mockDevice.consumoWatts}W</StatValue>
+                <StatValue>{device.consumoWatts}W</StatValue>
                 <StatLabel>Potência</StatLabel>
               </StatBadge>
               <StatBadge>
-                <StatValue>{mockDevice.usoHorasDia}h</StatValue>
+                <StatValue>{device.usoHorasDia}h</StatValue>
                 <StatLabel>por dia</StatLabel>
               </StatBadge>
               <StatBadge>
-                <StatValue>{mockDevice.usoDiasSemana} dias</StatValue>
+                <StatValue>{device.usoDiasSemana} dias</StatValue>
                 <StatLabel>por semana</StatLabel>
               </StatBadge>
             </BadgesRow>
           </DeviceCard>
 
-          {/* Card de custo estimado */}
           <CostCard>
             <CostTitle>Custo estimado</CostTitle>
 
             <CostRow>
               <CostRowLabel>Por dia</CostRowLabel>
-              <CostRowValue>
-                {mockCosts.porDia.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-              </CostRowValue>
+              <CostRowValue>{fmt(costDay)}</CostRowValue>
             </CostRow>
 
             <CostRow $highlight>
               <CostRowLabel>Por mês</CostRowLabel>
-              <CostHighlight>
-                {mockCosts.porMes.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-              </CostHighlight>
+              <CostHighlight>{fmt(costMonth)}</CostHighlight>
             </CostRow>
 
             <CostRow>
               <CostRowLabel>Por ano</CostRowLabel>
-              <CostRowValue>
-                {mockCosts.porAno.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-              </CostRowValue>
+              <CostRowValue>{fmt(costYear)}</CostRowValue>
             </CostRow>
 
-            <CostNote>Baseado na tarifa efetiva {mockCosts.tarifaReferencia}</CostNote>
+            <CostNote>
+              Baseado na tarifa efetiva R$ {RATE_PER_KWH.toFixed(2).replace('.', ',')}/kWh (mar/2025)
+            </CostNote>
           </CostCard>
         </LeftColumn>
 
-        {/* Coluna direita */}
+        {/* ── Coluna direita ── */}
         <RightColumn>
-          {/* Card de impacto ambiental */}
           <ImpactCard>
             <ImpactTitle>Impacto ambiental</ImpactTitle>
             <ImpactSubtitle>Estimativas mensais baseadas no consumo médio</ImpactSubtitle>
@@ -174,10 +176,12 @@ export default function DeviceDetail() {
             ))}
           </ImpactCard>
 
-          {/* Card de dica de economia */}
           <TipCard>
             <TipTitle>Dica de economia</TipTitle>
-            <TipText>{mockTip}</TipText>
+            <TipText>
+              Habilitar suspensão após 10 min de inatividade pode reduzir o consumo em até{' '}
+              <strong>15%</strong>, economizando <strong>{fmt(costMonth * 0.15)}/mês</strong>.
+            </TipText>
           </TipCard>
         </RightColumn>
       </ContentGrid>

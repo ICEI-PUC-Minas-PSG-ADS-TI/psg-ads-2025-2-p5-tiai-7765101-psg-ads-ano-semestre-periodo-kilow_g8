@@ -98,6 +98,11 @@ export default function CadastroLink() {
             </ExampleChip>
           ))}
         </ExamplesRow>
+
+        {/* Rodapé com botão de voltar */}
+        <div>
+          <Button isEnabled={true} handleClick={() => router.push('/deviceList')} text="Cancelar" />
+        </div>
       </Card>
     </PageWrapper>
   );

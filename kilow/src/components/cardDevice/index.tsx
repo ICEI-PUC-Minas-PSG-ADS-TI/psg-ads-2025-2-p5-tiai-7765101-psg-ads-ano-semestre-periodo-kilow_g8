@@ -14,10 +14,11 @@ import {
 interface CardDeviceProps {
   name: string;
   category: string;
-  power: number;       // em Watts
+  power: number; // em Watts
   hoursPerDay: number; // horas por dia
   daysPerWeek: number; // dias por semana (exibido como "X dias")
   costPerKwh?: number; // tarifa R$/kWh (padrão 0.75)
+  onClick?: () => void;
 }
 
 /** Retorna as iniciais de até 2 palavras do nome */
@@ -51,7 +52,8 @@ function calcMonthlyCost(
   ratePerKwh: number,
 ): number {
   const weeksPerMonth = 4.33;
-  const kwhPerMonth = (watts / 1000) * hoursPerDay * daysPerWeek * weeksPerMonth;
+  const kwhPerMonth =
+    (watts / 1000) * hoursPerDay * daysPerWeek * weeksPerMonth;
   return kwhPerMonth * ratePerKwh;
 }
 
@@ -62,17 +64,26 @@ export default function CardDevice({
   hoursPerDay,
   daysPerWeek,
   costPerKwh = 0.75,
+  onClick,
 }: CardDeviceProps) {
   const initials = getInitials(name);
   const avatarColor = getAvatarColor(category);
-  const monthlyCost = calcMonthlyCost(power, hoursPerDay, daysPerWeek, costPerKwh);
+  const monthlyCost = calcMonthlyCost(
+    power,
+    hoursPerDay,
+    daysPerWeek,
+    costPerKwh,
+  );
   const costFormatted = monthlyCost.toLocaleString('pt-BR', {
     style: 'currency',
     currency: 'BRL',
   });
 
   return (
-    <Container>
+    <Container
+      onClick={onClick}
+      style={{ cursor: onClick ? 'pointer' : 'default' }}
+    >
       <AvatarBox $color={avatarColor}>
         <AvatarText>{initials}</AvatarText>
       </AvatarBox>
