@@ -6,7 +6,7 @@ export const spin = keyframes`
   to { transform: rotate(360deg); }
 `;
 
-export const LoadingContainer = styled.div`
+export const LoadingContainer = styled.div<{ isToast?: boolean }>`
   display: flex;
   width: fit-content;
   position: relative;
@@ -14,7 +14,7 @@ export const LoadingContainer = styled.div`
   align-items: center;
   justify-content: center;
   border-radius: 100%;
-  left: 44px;
+  left: ${({ isToast }) => (isToast ? 44 : 0)}px;
 `;
 
 export const amberGlow = keyframes`

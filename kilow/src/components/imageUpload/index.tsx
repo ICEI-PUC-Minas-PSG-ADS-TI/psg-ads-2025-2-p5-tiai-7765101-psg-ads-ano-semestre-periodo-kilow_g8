@@ -25,61 +25,61 @@ const ImageUpload = () => {
   };
 
   return (
-    <div
-      style={{ display: 'flex', flexDirection: 'column', gap: 12 }}
-      onClick={() => fileInputElementRef.current?.click()}
-    >
-      {success && (
-        <InfoAlert style={{ backgroundColor: colors.successGreen }}>
-          <CircleCheck color={colors.darkGreen} size={16} />
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div onClick={() => fileInputElementRef.current?.click()}>
+        {success && (
+          <InfoAlert
+            style={{ backgroundColor: colors.lightGreen, marginBottom: 8 }}
+          >
+            <CircleCheck color={colors.darkGreen} size={16} />
 
-          <StyledText color="darkGreen" size={10} weight={450}>
-            <b>Dados extraídos com sucesso —</b> Confira e ajuste se necessário
-            antes de salvar
-          </StyledText>
-        </InfoAlert>
-      )}
+            <StyledText color="darkGreen" size={10} weight={450}>
+              <b>Dados extraídos com sucesso —</b> Confira e ajuste se
+              necessário antes de salvar
+            </StyledText>
+          </InfoAlert>
+        )}
 
-      {success ? (
-        <div style={{ display: 'flex', gap: 16 }}>
-          <BillingFormContainer $width="65%">
-            <BillingForm />
-          </BillingFormContainer>
-          <div style={{ flex: 1 }}>
-            <BillingImageComponent />
+        {success ? (
+          <div style={{ display: 'flex', gap: 16 }}>
+            <BillingFormContainer width="65%">
+              <BillingForm />
+            </BillingFormContainer>
+            <div style={{ flex: 1 }}>
+              <BillingImageComponent />
+            </div>
           </div>
-        </div>
-      ) : (
-        <ImageUploadContainer>
-          {isLoading ? (
-            <MiniIdeaLoader />
-          ) : (
-            <>
-              <input
-                type="file"
-                accept="image/png, image/jpeg, application/pdf"
-                ref={fileInputElementRef}
-                onChange={handleFileChange}
-                style={{ display: 'none' }}
-              />
-              <FileUp size={32} color={colors.cyanBlue} />
-              <StyledText color="darkBlue" size={12} weight={700}>
-                Arraste ou clique para enviar o arquivo
-              </StyledText>
-              <StyledText color="darkTextGray" size={10} weight={500}>
-                PDF, JPG ou PNG · até 10 MB{' '}
-              </StyledText>
-            </>
-          )}
-        </ImageUploadContainer>
-      )}
-
+        ) : (
+          <ImageUploadContainer>
+            {isLoading ? (
+              <MiniIdeaLoader isToast={false} />
+            ) : (
+              <>
+                <input
+                  type="file"
+                  accept="image/png, image/jpeg, application/pdf"
+                  ref={fileInputElementRef}
+                  onChange={handleFileChange}
+                  style={{ display: 'none' }}
+                />
+                <FileUp size={32} color={colors.cyanBlue} />
+                <StyledText color="darkBlue" size={12} weight={700}>
+                  Arraste ou clique para enviar o arquivo
+                </StyledText>
+                <StyledText color="darkGray" size={10} weight={500}>
+                  PDF, JPG ou PNG · até 10 MB{' '}
+                </StyledText>
+              </>
+            )}
+          </ImageUploadContainer>
+        )}
+      </div>
       <InfoAlert>
         <Info
           fill={colors.cyanBlue}
           stroke={colors.backgroundWhite}
           strokeWidth={2}
-          size={16}
+          size={13}
         />
 
         <StyledText color="cyanBlue" size={10} weight={450}>

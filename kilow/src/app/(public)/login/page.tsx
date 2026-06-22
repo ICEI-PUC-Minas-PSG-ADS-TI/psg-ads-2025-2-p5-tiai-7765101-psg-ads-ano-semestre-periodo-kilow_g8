@@ -27,7 +27,7 @@ const LoginPage = () => {
       bannerText="Pronto para economizar na sua conta de luz?"
     >
       <FormWrapper>
-        <DecorativeImage src="/assets/loginImage2.png" alt="Decoração" />
+        <DecorativeImage src="/assets/login.png" alt="Decoração" />
 
         <ContentContainer>
           <header>

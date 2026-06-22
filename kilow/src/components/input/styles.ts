@@ -17,11 +17,11 @@ export const InputStyle = styled.input<InputStyleProps>`
   outline: none;
 
   &:focus {
-    border: 2px solid ${colors.darkGray};
+    border: 2px solid ${colors.mediumGray};
   }
 
   &::placeholder {
-    color: ${colors.darkTextGray}80;
+    color: ${colors.darkGray}80;
     opacity: 1;
   }
 }

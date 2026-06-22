@@ -30,7 +30,7 @@ const FieldWrapper = ({
         {label} {isRequired && '*'}
       </StyledText>
       {description && (
-        <StyledText color="darkTextGray" size={12} weight={350}>
+        <StyledText color="darkGray" size={12} weight={350}>
           {description}
         </StyledText>
       )}

@@ -35,7 +35,7 @@ const CreateBillingContent = () => {
         gap: 24,
       }}
     >
-      <BillingFormContainer $width="50%">
+      <BillingFormContainer width="70%">
         <OptionsContainer>
           {CreateBillingTabs.map((tab) => {
             const isSelected = selectedRegisterType === tab.registerType;
@@ -75,14 +75,14 @@ const CreateBillingContent = () => {
           display: 'flex',
           flexDirection: 'column',
           gap: 20,
-          maxWidth: '40%',
+          maxWidth: '35%',
         }}
       >
         <InfoContainer>
           <StyledText color="darkBlue" size={13} weight={700}>
             O que é a tarifa efetiva?
           </StyledText>
-          <StyledText color="darkTextGray" size={12} weight={400}>
+          <StyledText color="darkGray" size={12} weight={400}>
             É o custo real de 1 kWh para você, já incluindo todos os impostos,
             taxas e bandeiras tarifárias — sem precisar entender cada item da
             fatura.

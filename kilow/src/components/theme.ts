@@ -3,47 +3,74 @@ export const colors = {
   darkBlue: '#192C3A',
   cyanBlue: '#2D5D7B',
   black: '#0F0F0F',
-  white: '#F9F7F2',
+  red: '#dc2626',
+  lightRed: '#fef2f2',
+  lightGray: '#EEEBE4',
+  lightOrange: '#fff5e8',
+  mediumGray: '#9E9E9E',
   backgroundGray: '#F9F7F2',
   backgroundWhite: '#FFF',
-  lightGray: '#EEEBE4',
-  darkGray: '#9E9E9E',
-  darkTextGray: '#6b7280',
+  darkGray: '#6b7280',
   darkGreen: '#1d820e',
-  lightOrange: '#fff5e8',
-  successGreen: '#dcfce7',
+  lightGreen: '#dcfce7',
 };
+
+export interface ButtonVariantStyle {
+  backgroundColor: string;
+  color: string;
+  border?: string;
+}
 
 export type ButtonVariants =
   | 'darkBlue'
   | 'yellow'
   | 'transparent'
   | 'gray'
-  | 'white';
+  | 'white'
+  | 'red'
+  | 'lightRed'
+  | 'white_cyan';
+
 export type ButtonSizes = 'large' | 'normal' | 'small';
 
-export const buttonsVariantsProps = {
-  darkBlue: {
-    backgroundColor: colors.darkBlue,
-    color: colors.yellow,
-  },
-  gray: {
-    backgroundColor: colors.lightGray,
-    color: colors.darkBlue,
-  },
-  transparent: {
-    backgroundColor: 'transparent',
-    color: colors.darkBlue,
-  },
-  yellow: {
-    backgroundColor: colors.yellow,
-    color: colors.darkBlue,
-  },
-  white: {
-    backgroundColor: colors.backgroundWhite,
-    color: colors.darkBlue,
-  },
-};
+export type BoxSizes = Omit<ButtonSizes, 'large'>;
+
+export const buttonsVariantsProps: Record<ButtonVariants, ButtonVariantStyle> =
+  {
+    darkBlue: {
+      backgroundColor: colors.darkBlue,
+      color: colors.yellow,
+    },
+    gray: {
+      backgroundColor: colors.lightGray,
+      color: colors.darkBlue,
+    },
+    transparent: {
+      backgroundColor: 'transparent',
+      color: colors.darkBlue,
+    },
+    yellow: {
+      backgroundColor: colors.yellow,
+      color: colors.darkBlue,
+    },
+    white: {
+      backgroundColor: colors.backgroundWhite,
+      color: colors.darkBlue,
+    },
+    red: {
+      backgroundColor: colors.red,
+      color: colors.backgroundWhite,
+    },
+    lightRed: {
+      backgroundColor: colors.lightRed,
+      color: colors.red,
+    },
+    white_cyan: {
+      backgroundColor: colors.backgroundWhite,
+      color: colors.darkBlue,
+      border: colors.cyanBlue,
+    },
+  };
 
 export const buttonsSizesProps = {
   normal: {
@@ -53,8 +80,8 @@ export const buttonsSizesProps = {
   },
   large: {
     padding: 8,
-    fontSize: 26,
-    fontWeight: 650,
+    fontSize: 24,
+    fontWeight: 600,
   },
   small: {
     padding: 8,
