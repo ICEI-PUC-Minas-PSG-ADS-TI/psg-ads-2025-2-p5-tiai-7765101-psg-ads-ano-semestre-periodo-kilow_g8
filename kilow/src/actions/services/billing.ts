@@ -1,5 +1,6 @@
 'use server';
 
+import { ActionResponse } from '../types/auth';
 import {
   BillingDataFromFileResponse,
   BillingListActionResponse,
@@ -55,6 +56,17 @@ export const getBillingDetailAction = async (
   try {
     const { data } = await api.get(`${billingURL}/getDetail/${id}`);
     return { success: true, billing: data };
+  } catch (error) {
+    return handleActionError(error);
+  }
+};
+
+export const deleteBillingAction = async (
+  id: number,
+): Promise<ActionResponse> => {
+  try {
+    await api.delete(`${billingURL}/delete/${id}`);
+    return { success: true };
   } catch (error) {
     return handleActionError(error);
   }
