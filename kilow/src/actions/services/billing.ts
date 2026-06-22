@@ -5,6 +5,7 @@ import {
   BillingListActionResponse,
   CreateBillingActionRequest,
   CreateBillingActionResponse,
+  GetBillingDetailActionResponse,
 } from '../types/billing';
 import api from '../utils/api';
 import { handleActionError } from '../utils/handleActionError';
@@ -15,7 +16,7 @@ export const getBillingsListAction =
   async (): Promise<BillingListActionResponse> => {
     try {
       const { data } = await api.get(billingURL + '/getAll');
-      return { success: true, list: data };
+      return { success: true, content: data };
     } catch (error) {
       return handleActionError(error);
     }
@@ -43,6 +44,17 @@ export const getBillingDataFromFile = async (
     });
 
     return { success: true, billingData: data };
+  } catch (error) {
+    return handleActionError(error);
+  }
+};
+
+export const getBillingDetailAction = async (
+  id: number,
+): Promise<GetBillingDetailActionResponse> => {
+  try {
+    const { data } = await api.get(`${billingURL}/getDetail/${id}`);
+    return { success: true, billing: data };
   } catch (error) {
     return handleActionError(error);
   }
