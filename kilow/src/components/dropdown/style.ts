@@ -17,14 +17,16 @@ export const InputTrigger = styled.button<InputTriggerProps>`
   cursor: pointer;
   font-size: 16px;
   text-align: left;
-  transition: border-bottom-color 0.2s ease;
+  transition: border 0.2s ease;
+
   ${({ isSelected }) =>
     isSelected
       ? ` 
       outline: none;
-      border-bottom: 2px solid ${colors.cyanBlue};`
-      : `border: 1px solid ${colors.lightGray};
-`}
+      border: 1px solid ${colors.lightGray}; 
+      border: 2px solid ${colors.mediumGray};
+      `
+      : `border: 1px solid ${colors.lightGray};`}
 
   &[data-placeholder] {
     color: ${colors.darkGray}80;

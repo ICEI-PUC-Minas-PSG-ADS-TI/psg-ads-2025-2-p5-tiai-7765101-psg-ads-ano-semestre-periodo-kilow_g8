@@ -24,5 +24,5 @@ export const InfoAlert = styled.div`
   gap: 4px;
   border-radius: 8px;
   padding: 16px;
-  alignitems: center;
+  align-items: center;
 `;

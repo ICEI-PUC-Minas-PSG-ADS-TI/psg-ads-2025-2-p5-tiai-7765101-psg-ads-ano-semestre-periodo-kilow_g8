@@ -15,7 +15,7 @@ const Button = ({
   ...rest
 }: ButtonProps) => {
   return (
-    <StyledButton $variant={variant} $size={size} {...rest}>
+    <StyledButton variant={variant} size={size} {...rest}>
       {children}
     </StyledButton>
   );

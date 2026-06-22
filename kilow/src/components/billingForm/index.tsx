@@ -30,9 +30,7 @@ const BillingForm = () => {
           label="Mês referência"
           variant="small"
           isRequired
-          description="Informe o mês referência da nova conta
-
-"
+          description="Informe o mês referência da nova conta"
         >
           <Dropdown
             selectedValue={billingForm.referenceMonth}

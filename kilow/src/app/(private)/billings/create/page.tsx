@@ -35,7 +35,7 @@ const CreateBillingContent = () => {
         gap: 24,
       }}
     >
-      <BillingFormContainer $width="50%">
+      <BillingFormContainer width="70%">
         <OptionsContainer>
           {CreateBillingTabs.map((tab) => {
             const isSelected = selectedRegisterType === tab.registerType;
@@ -75,7 +75,7 @@ const CreateBillingContent = () => {
           display: 'flex',
           flexDirection: 'column',
           gap: 20,
-          maxWidth: '40%',
+          maxWidth: '35%',
         }}
       >
         <InfoContainer>
