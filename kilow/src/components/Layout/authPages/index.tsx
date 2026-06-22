@@ -29,17 +29,17 @@ const AuthLayout = ({
     <div style={{ display: 'flex', flex: 1, flexDirection: direction }}>
       <LateralBlueContainer>
         <BackgroundBubble
-          $size="450px"
-          $top="-150px"
-          $left="-200px"
-          $color={`${colors.cyanBlue}50`}
+          size="450px"
+          top="-150px"
+          left="-200px"
+          color={`${colors.cyanBlue}50`}
         />
 
         <BackgroundBubble
-          $size="350px"
-          $bottom="-220px"
-          $right="-90px"
-          $color={`${colors.yellow}20`}
+          size="350px"
+          bottom="-220px"
+          right="-90px"
+          color={`${colors.yellow}20`}
         />
 
         <div>
@@ -84,7 +84,7 @@ const AuthLayout = ({
         />
       </LateralBlueContainer>
 
-      <AuthPageContent $bannerPosition={bannerPosition}>
+      <AuthPageContent bannerPosition={bannerPosition}>
         {children}
       </AuthPageContent>
     </div>
