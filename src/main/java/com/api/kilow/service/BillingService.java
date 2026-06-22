@@ -6,6 +6,7 @@ import com.api.kilow.model.Billing;
 import com.api.kilow.model.User;
 import com.api.kilow.repository.BillingsRepository;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -44,7 +45,16 @@ public class BillingService {
         effectiveTariff);
   }
 
-  public List<GetBillingResponse> getAllBillings() {
+  public BillingListResponse listBilligs() {
+    List<GetBillingResponse> allBillings = this.getAllBillings();
+    return new BillingListResponse(
+        this.getTotalBillings(),
+        allBillings,
+        this.getMostExpensiveBilling(),
+        this.getEffectiveTariffAverage(allBillings));
+  }
+
+  private List<GetBillingResponse> getAllBillings() {
     User loggedUser = loggedUserService.getUser();
 
     return billingsRepository.findByUser(loggedUser).stream()
@@ -65,11 +75,7 @@ public class BillingService {
   }
 
   public void deleteBilling(Long id) {
-    Billing billingToDelete =
-        billingsRepository
-            .findById(id)
-            .orElseThrow(
-                () -> new RulesException("Conta de luz não encontrado. Verifique o ID digitado."));
+    Billing billingToDelete = getBillingById(id);
 
     validateUser(billingToDelete);
 
@@ -77,11 +83,7 @@ public class BillingService {
   }
 
   public UpdateBillingResponse updateBilling(Long id, UpdateBillingRequest requestBody) {
-    Billing billingToUpdate =
-        billingsRepository
-            .findById(id)
-            .orElseThrow(
-                () -> new RulesException("Conta de luz não encontrado. Verifique o ID digitado."));
+    Billing billingToUpdate = getBillingById(id);
 
     validateUser(billingToUpdate);
 
@@ -109,6 +111,69 @@ public class BillingService {
         extractData.anoReferencia(),
         extractData.valorTotal(),
         extractData.consumoTotalKwh());
+  }
+
+  public GetBillingDetail getBillingDetail(Long id) {
+    Billing billingToView = getBillingById(id);
+
+    validateUser(billingToView);
+    Double effectiveTariff =
+        getEffectiveTariff(billingToView.getValorTotal(), billingToView.getConsumoTotalKwh());
+
+    return new GetBillingDetail(
+        billingToView.getApelido(),
+        billingToView.getMesReferencia(),
+        billingToView.getAnoReferencia(),
+        billingToView.getValorTotal(),
+        billingToView.getConsumoTotalKwh(),
+        effectiveTariff);
+  }
+
+  private GetBillingDetail getMostExpensiveBilling() {
+    User loggedUser = loggedUserService.getUser();
+
+    Optional<Billing> mostExpensiveOpt =
+        billingsRepository.findFirstByUserOrderByValorTotalDesc(loggedUser);
+
+    if (mostExpensiveOpt.isEmpty()) return null;
+
+    Billing mostExpensive = mostExpensiveOpt.get();
+
+    Double effectiveTariff =
+        getEffectiveTariff(mostExpensive.getValorTotal(), mostExpensive.getConsumoTotalKwh());
+
+    return new GetBillingDetail(
+        mostExpensive.getApelido(),
+        mostExpensive.getMesReferencia(),
+        mostExpensive.getAnoReferencia(),
+        mostExpensive.getValorTotal(),
+        mostExpensive.getConsumoTotalKwh(),
+        effectiveTariff);
+  }
+
+  private Double getTotalAmountPerYear(Integer ano) {
+    User loggedUser = loggedUserService.getUser();
+
+    List<Billing> contasDesteAno = billingsRepository.findByUserAndAnoReferencia(loggedUser, ano);
+    return contasDesteAno.stream().mapToDouble(Billing::getValorTotal).sum();
+  }
+
+  private Billing getBillingById(Long id) {
+    return billingsRepository
+        .findById(id)
+        .orElseThrow(
+            () -> new RulesException("Conta de luz não encontrado. Verifique o ID digitado."));
+  }
+
+  private Integer getTotalBillings() {
+    return this.getAllBillings().size();
+  }
+
+  private Double getEffectiveTariffAverage(List<GetBillingResponse> allBillings) {
+    Double somaValor = allBillings.stream().mapToDouble(GetBillingResponse::valorTotal).sum();
+    Double somaConsumoKwh =
+        allBillings.stream().mapToDouble(GetBillingResponse::consumoTotalKwh).sum();
+    return getEffectiveTariff(somaValor, somaConsumoKwh);
   }
 
   private String getBillingNickname(CreateBillingRequest billingRequest) {
