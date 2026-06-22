@@ -51,7 +51,7 @@ export const StyledTitle = styled(Toast.Title)`
 
 export const StyledDescription = styled(Toast.Description)`
   font-size: 0.875rem;
-  color: ${colors.darkTextGray};
+  color: ${colors.darkGray};
   margin: 0;
   display: flex;
 `;
@@ -70,6 +70,6 @@ export const StyledClose = styled(Toast.Close)`
 
   &:hover {
     background: ${colors.backgroundWhite};
-    color: ${colors.darkGray};
+    color: ${colors.mediumGray};
   }
 `;

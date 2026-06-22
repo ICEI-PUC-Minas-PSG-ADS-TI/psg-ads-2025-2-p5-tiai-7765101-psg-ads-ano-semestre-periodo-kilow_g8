@@ -17,3 +17,9 @@ export const StyledText = styled.div<ITextProps>`
   ${(props) => props.maxWidth && `max-width: ${props.maxWidth}px;`}
   ${(props) => props.cursor && `cursor: ${props.cursor};`}
 `;
+
+export const StyledLinkText = styled.b`
+  cursor: pointer;
+  text-decoration: underline;
+  color: ${colors.darkBlue};
+`;

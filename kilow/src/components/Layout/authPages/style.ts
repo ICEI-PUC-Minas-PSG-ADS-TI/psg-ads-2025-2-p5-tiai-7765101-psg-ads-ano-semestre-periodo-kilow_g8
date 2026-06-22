@@ -14,26 +14,26 @@ export const LateralBlueContainer = styled.div`
 `;
 
 interface BubbleProps {
-  $size: string;
-  $top?: string;
-  $left?: string;
-  $right?: string;
-  $bottom?: string;
-  $color: string;
+  size: string;
+  top?: string;
+  left?: string;
+  right?: string;
+  bottom?: string;
+  color: string;
 }
 
 export const BackgroundBubble = styled.div<BubbleProps>`
   position: absolute;
   border-radius: 50%;
-  width: ${(props) => props.$size};
-  height: ${(props) => props.$size};
+  width: ${(props) => props.size};
+  height: ${(props) => props.size};
 
-  top: ${(props) => props.$top || 'auto'};
-  bottom: ${(props) => props.$bottom || 'auto'};
-  left: ${(props) => props.$left || 'auto'};
-  right: ${(props) => props.$right || 'auto'};
+  top: ${(props) => props.top || 'auto'};
+  bottom: ${(props) => props.bottom || 'auto'};
+  left: ${(props) => props.left || 'auto'};
+  right: ${(props) => props.right || 'auto'};
 
-  background: ${(props) => props.$color};
+  background: ${(props) => props.color};
   opacity: 0.5;
   filter: blur(1px);
 
@@ -79,7 +79,7 @@ export const FormWrapper = styled.div`
 
 export const DecorativeImage = styled.img`
   position: absolute;
-  right: 5%;
+  right: 1%;
   top: 0;
   width: 40%;
   z-index: -1;
@@ -108,7 +108,7 @@ export const Divider = styled.div`
 
 export const FooterText = styled.p`
   text-align: center;
-  color: ${colors.darkTextGray};
+  color: ${colors.darkGray};
 
   span {
     cursor: pointer;
@@ -123,13 +123,13 @@ export const FooterText = styled.p`
 `;
 
 export const AuthPageContent = styled.div<{
-  $bannerPosition: 'left' | 'right';
+  bannerPosition: 'left' | 'right';
 }>`
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   position: relative;
-  padding-left: ${({ $bannerPosition }) =>
-    $bannerPosition === 'right' ? 120 : 0};
+  padding-left: ${({ bannerPosition }) =>
+    bannerPosition === 'right' ? 120 : 0};
 `;

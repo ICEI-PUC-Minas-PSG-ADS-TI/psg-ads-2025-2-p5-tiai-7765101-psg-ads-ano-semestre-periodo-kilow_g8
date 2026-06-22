@@ -30,9 +30,7 @@ const BillingForm = () => {
           label="Mês referência"
           variant="small"
           isRequired
-          description="Informe o mês referência da nova conta
-
-"
+          description="Informe o mês referência da nova conta"
         >
           <Dropdown
             selectedValue={billingForm.referenceMonth}
@@ -84,7 +82,7 @@ const BillingForm = () => {
         />
       </FieldWrapper>
       <EffectiveTariff>
-        <StyledText color="darkTextGray" size={10} weight={600}>
+        <StyledText color="darkGray" size={10} weight={600}>
           TARIFA EFETIVA APROXIMADA
         </StyledText>
         <StyledText color="darkBlue" size={16} weight={700}>

@@ -2,7 +2,6 @@
 import { logoutAction } from '@/actions/services/auth';
 import Button from '@/components/button';
 import { StyledText } from '@/components/text';
-import { colors } from '@/components/theme';
 import Image from 'next/image';
 import { HomeContainer } from './styles';
 

@@ -3,9 +3,9 @@ import { ActionResponse } from '../types/auth';
 
 export const handleActionError = (error: unknown): ActionResponse => {
   if (error instanceof AxiosError) {
-    console.log('Status:', error.response?.status);
-    console.log('Mensagem geral:', error.message);
-    console.log('Dados backend:', error.response?.data);
+    console.error('Status:', error.response?.status);
+    console.error('Mensagem geral:', error.message);
+    console.error('Dados backend:', error.response?.data);
     return {
       success: false,
       error:

@@ -16,17 +16,58 @@ export const CreateBillingTabs: IOption[] = [
   },
 ];
 
-export const months = [
-  { optionName: 'Janeiro', optionValue: '01 (Jan.)' },
-  { optionName: 'Fevereiro', optionValue: '02 (Fev.)' },
-  { optionName: 'Março', optionValue: '03 (Mar.)' },
-  { optionName: 'Abril', optionValue: '04 (Abr.)' },
-  { optionName: 'Maio', optionValue: '05 (Mai.)' },
-  { optionName: 'Junho', optionValue: '06 (Jun.)' },
-  { optionName: 'Julho', optionValue: '07 (Jul.)' },
-  { optionName: 'Agosto', optionValue: '08 (Ago.)' },
-  { optionName: 'Setembro', optionValue: '09 (Set.)' },
-  { optionName: 'Outubro', optionValue: '10 (Out.)' },
-  { optionName: 'Novembro', optionValue: '11 (Nov.)' },
-  { optionName: 'Dezembro', optionValue: '12 (Dez.)' },
-];
+export const AbbreviatedMonthName = {
+  1: 'jan',
+  2: 'fev',
+  3: 'mar',
+  4: 'abr',
+  5: 'mai',
+  6: 'jun',
+  7: 'jul',
+  8: 'ago',
+  9: 'set',
+  10: 'out',
+  11: 'nov',
+  12: 'dez',
+} as const;
+
+export const NameMonth = {
+  1: 'Janeiro',
+  2: 'Fevereiro',
+  3: 'Março',
+  4: 'Abril',
+  5: 'Maio',
+  6: 'Junho',
+  7: 'Julho',
+  8: 'Agosto',
+  9: 'Setembro',
+  10: 'Outubro',
+  11: 'Novembro',
+  12: 'Dezembro',
+} as const;
+
+export type MonthKey = keyof typeof AbbreviatedMonthName;
+
+export const months = Object.entries(NameMonth).map(
+  ([monthNumber, monthName]) => {
+    const monthKey = Number(monthNumber) as MonthKey;
+
+    const paddedMonthNumber = monthNumber.padStart(2, '0');
+
+    const monthAbbreviation = AbbreviatedMonthName[monthKey];
+
+    const formattedAbbr =
+      monthAbbreviation.charAt(0).toUpperCase() +
+      monthAbbreviation.slice(1) +
+      '.';
+
+    return {
+      optionName: monthName,
+      optionValue: `${paddedMonthNumber} (${formattedAbbr})`,
+    };
+  },
+);
+
+export const moneyFormat = (value: string | number) => {
+  return `R$ ${value.toString().replaceAll('.', ',')}`;
+};

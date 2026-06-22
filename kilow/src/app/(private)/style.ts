@@ -6,6 +6,6 @@ export const PrivateLayout = styled.div`
   flex-direction: column;
   justify-content: center;
   margin: 0 auto;
-  max-width: 80%;
+  max-width: 60%;
   gap: 16px;
 `;

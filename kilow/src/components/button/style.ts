@@ -4,12 +4,11 @@ import {
   buttonsSizesProps,
   buttonsVariantsProps,
   ButtonVariants,
-  colors,
 } from '../theme';
 
 interface StyledButtonProps {
-  $variant: ButtonVariants;
-  $size: ButtonSizes;
+  variant: ButtonVariants;
+  size: ButtonSizes;
 }
 
 export const StyledButton = styled.button<StyledButtonProps>`
@@ -24,13 +23,14 @@ export const StyledButton = styled.button<StyledButtonProps>`
 
   ${(props) =>
     `
-      padding: ${buttonsSizesProps[props.$size].padding}px;
-      font-size: ${buttonsSizesProps[props.$size].fontSize}px;
-      font-weight: ${buttonsSizesProps[props.$size].fontWeight};
+      padding: ${buttonsSizesProps[props.size].padding}px;
+      font-size: ${buttonsSizesProps[props.size].fontSize}px;
+      font-weight: ${buttonsSizesProps[props.size].fontWeight};
 
-      background-color:  ${buttonsVariantsProps[props.$variant].backgroundColor};
-      color:  ${buttonsVariantsProps[props.$variant].color};
-    `}
+      background-color:  ${buttonsVariantsProps[props.variant].backgroundColor};
+      color:  ${buttonsVariantsProps[props.variant].color};
+
+      border: 1px solid ${buttonsVariantsProps[props.variant].border || '0'};`}
 
   &:hover:not(:disabled) {
     opacity: 0.9;
