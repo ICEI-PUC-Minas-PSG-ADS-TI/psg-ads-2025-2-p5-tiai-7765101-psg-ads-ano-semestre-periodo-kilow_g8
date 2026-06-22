@@ -3,7 +3,6 @@ package com.api.kilow.controller;
 import com.api.kilow.dto.billing.*;
 import com.api.kilow.service.BillingService;
 import jakarta.validation.Valid;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,10 +23,17 @@ public class BillingController {
   }
 
   @GetMapping("/getAll")
-  public ResponseEntity<List<GetBillingResponse>> getAllBillings() {
-    List<GetBillingResponse> allBillings = billingService.getAllBillings();
+  public ResponseEntity<BillingListResponse> getAllBillings() {
+    BillingListResponse listBillingsResponse = billingService.listBilligs();
 
-    return ResponseEntity.ok(allBillings);
+    return ResponseEntity.ok(listBillingsResponse);
+  }
+
+  @GetMapping("/getDetail/{id}")
+  public ResponseEntity<GetBillingDetail> getBillingDetail(@PathVariable Long id) {
+    GetBillingDetail billing = billingService.getBillingDetail(id);
+
+    return ResponseEntity.ok(billing);
   }
 
   @PutMapping("/update/{id}")
