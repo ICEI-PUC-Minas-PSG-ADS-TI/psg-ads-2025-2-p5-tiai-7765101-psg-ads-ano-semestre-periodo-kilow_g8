@@ -19,7 +19,6 @@ export const useUploadBillingImage = () => {
     formFile.append('file', file);
     try {
       const response = await getBillingDataFromFile(formFile);
-      console.log(response);
       if (response.success) {
         setSuccess(true);
         showSuccess(
