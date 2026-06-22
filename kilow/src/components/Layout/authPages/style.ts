@@ -108,7 +108,7 @@ export const Divider = styled.div`
 
 export const FooterText = styled.p`
   text-align: center;
-  color: ${colors.darkTextGray};
+  color: ${colors.darkGray};
 
   span {
     cursor: pointer;

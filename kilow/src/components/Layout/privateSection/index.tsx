@@ -36,7 +36,7 @@ const PrivateLayout = ({
       <StyledText color="darkBlue" size={24} weight={700}>
         {pageTitle}
       </StyledText>
-      <StyledText color="darkTextGray" size={12} weight={400}>
+      <StyledText color="darkGray" size={12} weight={400}>
         {pageSubtitle}
       </StyledText>
       {children}

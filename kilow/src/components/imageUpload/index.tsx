@@ -66,7 +66,7 @@ const ImageUpload = () => {
               <StyledText color="darkBlue" size={12} weight={700}>
                 Arraste ou clique para enviar o arquivo
               </StyledText>
-              <StyledText color="darkTextGray" size={10} weight={500}>
+                <StyledText color="darkGray" size={10} weight={500}>
                 PDF, JPG ou PNG · até 10 MB{' '}
               </StyledText>
             </>

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 export const BillingFormContainer = styled.div<{ $width?: string }>`
   background-color: ${colors.backgroundWhite};
-  border: 0.25px solid ${colors.darkGray}60;
+  border: 0.25px solid ${colors.mediumGray}60;
   border-radius: 16px;
   padding: 16px;
   max-width: ${({ $width }) => ($width ? $width : 'auto')};

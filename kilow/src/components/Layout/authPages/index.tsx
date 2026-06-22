@@ -66,7 +66,7 @@ const AuthLayout = ({
           }}
         >
           <StyledText
-            color="white"
+            color="backgroundGray"
             size={28}
             weight={350}
             maxWidth={360}

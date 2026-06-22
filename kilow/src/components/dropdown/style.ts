@@ -27,13 +27,13 @@ export const InputTrigger = styled.button<InputTriggerProps>`
 `}
 
   &[data-placeholder] {
-    color: ${colors.darkTextGray}80;
+    color: ${colors.darkGray}80;
   }
 `;
 
 export const DropdownItem = styled.li`
   padding: 8px 12px;
-  color: ${colors.white};
+  color: ${colors.backgroundGray};
   font-size: 12px;
   cursor: pointer;
   transition: background-color 0.2s ease;
@@ -57,6 +57,7 @@ export const DropdownPopup = styled.div`
   max-height: 160px;
   overflow-y: auto;
   box-shadow: 0px 8px 16px ${colors.black}25;
+  border: 1px solid ${colors.lightGray};
   z-index: 50;
   outline: none;
 

@@ -84,7 +84,7 @@ const BillingForm = () => {
         />
       </FieldWrapper>
       <EffectiveTariff>
-        <StyledText color="darkTextGray" size={10} weight={600}>
+        <StyledText color="darkGray" size={10} weight={600}>
           TARIFA EFETIVA APROXIMADA
         </StyledText>
         <StyledText color="darkBlue" size={16} weight={700}>

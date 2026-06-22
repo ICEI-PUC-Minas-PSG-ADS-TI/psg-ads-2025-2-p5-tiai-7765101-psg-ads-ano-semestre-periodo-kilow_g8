@@ -82,7 +82,7 @@ const CreateBillingContent = () => {
           <StyledText color="darkBlue" size={13} weight={700}>
             O que é a tarifa efetiva?
           </StyledText>
-          <StyledText color="darkTextGray" size={12} weight={400}>
+          <StyledText color="darkGray" size={12} weight={400}>
             É o custo real de 1 kWh para você, já incluindo todos os impostos,
             taxas e bandeiras tarifárias — sem precisar entender cada item da
             fatura.
