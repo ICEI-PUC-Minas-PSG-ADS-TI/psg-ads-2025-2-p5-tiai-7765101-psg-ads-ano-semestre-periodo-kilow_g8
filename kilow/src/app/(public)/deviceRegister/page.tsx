@@ -55,6 +55,7 @@ const initialForm: FormState = {
 export default function CadastroDispositivo() {
   const router = useRouter();
   const [form, setForm] = useState<FormState>(initialForm);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -69,17 +70,59 @@ export default function CadastroDispositivo() {
     Number(form.usoHorasDia) > 0 &&
     Number(form.usoDiasSemana) > 0;
 
-  const handleSave = () => {
-    // TODO: conectar com a action de criação de dispositivo
-    console.log('Salvar dispositivo:', form);
+  const handleSave = async () => {
+    if (!isFormValid) return;
+
+    setLoading(true);
+
+    try {
+      // Ajuste a URL base se o seu backend estiver em outra porta ou domínio
+      const API_URL = 'http://localhost:8080';
+
+      // Monta o payload que o seu @PostMapping("/register") espera receber no corpo (RequestBody)
+      const payload = {
+        nome: form.nome,
+        consumoWatts: parseFloat(form.consumoWatts),
+        // Certifique-se de enviar o dado de tempo exatamente como o seu back-end (@Valid) espera
+        usoMinutosHorasDia: parseInt(form.usoHorasDia, 10),
+        usoDiasSemana: parseInt(form.usoDiasSemana, 10),
+      };
+
+      // Se você utiliza autenticação por token (ex: Bearer), lembre-se de adicionar o header de autorização
+      const token = localStorage.getItem('token');
+
+      const response = await fetch(`${API_URL}/devices/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token ? `Bearer ${token}` : '',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Erro ao cadastrar dispositivo');
+      }
+
+      const data = await response.json();
+      console.log('Dispositivo criado com sucesso:', data);
+
+      // Redireciona para a listagem após o sucesso
+      router.push('/deviceList');
+    } catch (error: any) {
+      alert(error.message || 'Erro de conexão com o servidor.');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Valores para o preview — usa fallback para não quebrar o card enquanto digita
-  const previewName     = form.nome.trim()           || 'Novo dispositivo';
-  const previewCategory = form.categoria             || 'Computadores';
-  const previewPower    = Number(form.consumoWatts)  || 0;
-  const previewHours    = Number(form.usoHorasDia)   || 0;
-  const previewDays     = Number(form.usoDiasSemana) || 0;
+  // Valores para o preview
+  const previewName = form.nome.trim() || 'Novo dispositivo';
+  const previewCategory = form.categoria || 'Computadores';
+  const previewPower = Number(form.consumoWatts) || 0;
+  const previewHours = Number(form.usoHorasDia) || 0;
+  const previewDays = Number(form.usoDiasSemana) || 0;
 
   return (
     <PageWrapper>
@@ -177,8 +220,20 @@ export default function CadastroDispositivo() {
           </FormCard>
 
           <FooterRow>
-            <Button isEnabled={true} handleClick={() => router.push('/deviceList')} text="Cancelar" />
-            <Button isEnabled={isFormValid} handleClick={handleSave} text="Salvar dispositivo" />
+            <FooterRow>
+              <Button
+                disabled={loading}
+                onClick={() => router.push('/deviceList')}
+              >
+                Cancelar
+              </Button>
+              <Button
+                disabled={!isFormValid || loading}
+                onClick={handleSave}
+              >
+                {loading ? 'Salvando...' : 'Salvar dispositivo'}
+              </Button>
+            </FooterRow>
           </FooterRow>
         </LeftColumn>
 

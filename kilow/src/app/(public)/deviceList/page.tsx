@@ -9,6 +9,7 @@ import Button from '@/components/button';
 import CardDevice from '@/components/cardDevice/index';
 import SelectCategories from '@/components/selectCategories/index';
 import { getAllDevicesAction } from '@/actions/device';
+import { IDevice } from '@/actions/types/devices';
 
 import {
   PageWrapper,
@@ -23,18 +24,12 @@ import {
   MagicLinkAction,
 } from './style';
 
-interface Device {
-  id: number;
-  nome: string;
-  consumoWatts: number;
-  usoMinutosHorasDia: number;
-  usoDiasSemana: number;
-  consumoMensalKwh: number;
-  categorie?: string;
-}
+const kilowattPrice = 0.75; // R$/kWh — ajustar conforme tarifa real
 
-// Mock de dados até ser possível fazer a conexão com o back-end
-const mockDevices: Device[] = [
+// Altere para false para conectar com a sua API (Spring Boot)
+const USE_MOCK = false; 
+
+const mockDevices: IDevice[] = [
   {
     id: 1,
     nome: 'PC Desktop',
@@ -53,50 +48,16 @@ const mockDevices: Device[] = [
     usoMinutosHorasDia: 3,
     usoDiasSemana: 5,
   },
-  {
-    id: 3,
-    nome: 'Monitor LG 27"',
-    categorie: 'Monitores',
-    consumoWatts: 65,
-    consumoMensalKwh: 2,
-    usoMinutosHorasDia: 5,
-    usoDiasSemana: 5,
-  },
-  {
-    id: 4,
-    nome: 'Notebook Dell',
-    categorie: 'Computadores',
-    consumoWatts: 45,
-    consumoMensalKwh: 2,
-    usoMinutosHorasDia: 4,
-    usoDiasSemana: 5,
-  },
-  {
-    id: 5,
-    nome: 'Roteador WiFi',
-    categorie: 'Redes',
-    consumoWatts: 8,
-    consumoMensalKwh: 2,
-    usoMinutosHorasDia: 2,
-    usoDiasSemana: 7,
-  },
 ];
-
-const kilowattPrice = 0.75; // R$/kWh — ajustar conforme tarifa real
-const USE_MOCK = true;
 
 function calcMonthlyCost(
   watts: number,
   hoursPerDay: number,
   daysPerWeek: number,
 ): number {
-  //Quanto tempo que ele gasta utilizando o aparelho por dia
   let h = hoursPerDay * daysPerWeek;
-  //O consumo mensal considerando o consumo diário (h)
   let consumoMensalEmWatt = watts * h;
-  //Valor convertido de W (watts) para kL (kilowatts), para facilitar o cáculo e a comparação com o valor cobrado na conta de luz
   let valorConvertidoParaWhats = consumoMensalEmWatt / 1000;
-  //Total achado multiplicado pelo valor do kilowatt descrito na conta de luz
   let custoTotal = valorConvertidoParaWhats * kilowattPrice;
   return custoTotal;
 }
@@ -104,15 +65,16 @@ function calcMonthlyCost(
 export default function DeviceList() {
   const router = useRouter();
 
-  const [devices, setDevices] = useState<Device[]>([]);
-  const [filteredDevices, setFilteredDevices] = useState<Device[]>([]);
+  const [devices, setDevices] = useState<IDevice[]>([]);
+  const [filteredDevices, setFilteredDevices] = useState<IDevice[]>([]);
   const [valueSearch, setValueSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Todas categorias');
   const [error, setError] = useState<string | null>(null);
+  
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchDevices = async () => {
-      //Essa verificação só existe enquanto os dados permancerem mocados
       if (USE_MOCK) {
         await new Promise((resolve) => setTimeout(resolve, 500));
         setDevices(mockDevices);
@@ -120,12 +82,15 @@ export default function DeviceList() {
         return;
       }
 
+      setLoading(true);
       const result = await getAllDevicesAction();
+      setLoading(false);
+      
       if (result.success && result.devices) {
         setDevices(result.devices);
         setFilteredDevices(result.devices);
       } else {
-        setError(result.message.description);
+        setError('Erro ao carregar dispositivos do servidor.');
       }
     };
 
@@ -150,12 +115,9 @@ export default function DeviceList() {
   };
 
   const handleChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (valueSearch.trim()) {
-      const val = e.target.value;
-      setValueSearch(val);
-      applyFilters(val, selectedCategory);
-    }
-    setFilteredDevices(devices);
+    const val = e.target.value;
+    setValueSearch(val);
+    applyFilters(val, selectedCategory);
   };
 
   const handleChangeCategory = (category: string) => {
@@ -197,18 +159,14 @@ export default function DeviceList() {
           title="Meus Dispositivos"
           subtitle={`${devices.length} dispositivos cadastrados · ${totalKwh} kWh/mês · ${totalCost}/mês`}
         />
-        {/* → deviceRegisterLink */}
-        <Button
-          isEnabled={true}
-          handleClick={() => router.push('/deviceRegisterLink')}
-          text="Cadastro por link"
-        />
-        {/* → deviceRegister */}
-        <Button
-          isEnabled={true}
-          handleClick={() => router.push('/deviceRegister')}
-          text="+ Novo dispositivo"
-        />
+        
+        <Button onClick={() => router.push('/deviceRegisterLink')}>
+          Cadastro por link
+        </Button>
+        
+        <Button onClick={() => router.push('/deviceRegister')}>
+          + Novo dispositivo
+        </Button>
       </DivDescription>
 
       {/* Barra de busca + filtro de categoria */}
@@ -223,19 +181,21 @@ export default function DeviceList() {
           value={selectedCategory}
           onChange={handleChangeCategory}
         />
-        <Button
-          isEnabled={true}
-          handleClick={handleCleanFilters}
-          text="Limpar filtros"
-        />
+        
+        <Button onClick={handleCleanFilters}>
+          Limpar filtros
+        </Button>
       </DivSearch>
 
       {/* Grid de cards — clique → deviceDetail */}
       <DivDevices>
         {error && <p style={{ color: 'red' }}>{error}</p>}
-        {error && filteredDevices.length === 0 && (
+        {loading && <p>Carregando dispositivos...</p>}
+        
+        {!loading && filteredDevices.length === 0 && (
           <p>Nenhum dispositivo encontrado.</p>
         )}
+        
         {filteredDevices.map((device) => (
           <CardDevice
             key={device.id}
@@ -250,7 +210,7 @@ export default function DeviceList() {
         ))}
       </DivDevices>
 
-      {/* Link Mágico → deviceRegisterLink */}
+      {/* Link Mágico */}
       <MagicLinkBanner>
         <MagicLinkLeft>
           <MagicLinkIcon>🔗</MagicLinkIcon>

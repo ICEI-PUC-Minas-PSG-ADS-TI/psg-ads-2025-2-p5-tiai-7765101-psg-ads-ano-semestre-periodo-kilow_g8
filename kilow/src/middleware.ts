@@ -1,12 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-<<<<<<< HEAD:kilow/src/proxy.ts
 export function proxy(request: NextRequest) {
   const publicRoutes = ['/login', '/register', '/deviceRegister', '/deviceList', '/deviceRegisterLink'];
-=======
-export function middleware(request: NextRequest) {
-  const publicRoutes = ['/login', '/register'];
->>>>>>> frontend/main:kilow/src/middleware.ts
   const isPublicRoute = publicRoutes.includes(request.nextUrl.pathname);
 
   const token = request.cookies.get('auth-token')?.value;
