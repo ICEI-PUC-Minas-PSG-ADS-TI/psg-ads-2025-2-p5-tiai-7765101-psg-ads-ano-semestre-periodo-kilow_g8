@@ -1,23 +1,25 @@
-import { logoutAction } from '@/actions/auth';
-import { StyledText } from '@/app/(public)/text';
-import Header from '@/components/header';
-import { colors } from '@/components/theme';
+'use client';
+import { logoutAction } from '@/actions/services/auth';
+import Button from '@/components/button';
+import { StyledText } from '@/components/text';
 import Image from 'next/image';
+import { HomeContainer } from './styles';
 
 const HomePage = () => {
   return (
-    <div
-      style={{
-        display: 'flex',
-        minHeight: '100vh',
-        width: '100vw',
-        flexDirection: 'column',
-        gap: 12,
-      }}
-    >
-      <Header />
-      <div style={{ justifyContent: 'center', margin: 'auto' }}>
-        <StyledText color="black" size={32} weight={300}>
+    <HomeContainer>
+      <div
+        style={{
+          justifyContent: 'center',
+          margin: 'auto',
+        }}
+      >
+        <StyledText
+          color="black"
+          size={32}
+          weight={300}
+          style={{ textAlign: 'center' }}
+        >
           Estamos trabalhando nos seus dados ;)
         </StyledText>
         <Image
@@ -26,23 +28,16 @@ const HomePage = () => {
           height={500}
           alt="homeImage"
         />
-        <button
+        <Button
           onClick={logoutAction}
-          style={{
-            backgroundColor: colors.yellow,
-            color: colors.darkBlue,
-            fontSize: 28,
-            padding: 8,
-            borderRadius: 12,
-            border: 0,
-            marginBlock: 12,
-            width: '100%',
-          }}
+          variant="yellow"
+          size="large"
+          style={{ width: '100%' }}
         >
           Loggout
-        </button>
+        </Button>
       </div>
-    </div>
+    </HomeContainer>
   );
 };
 

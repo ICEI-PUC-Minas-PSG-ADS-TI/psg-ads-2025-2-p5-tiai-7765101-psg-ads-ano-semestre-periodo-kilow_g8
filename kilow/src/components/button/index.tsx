@@ -1,28 +1,24 @@
-import React from "react";
+import { ButtonHTMLAttributes, ReactNode } from 'react';
+import { StyledButton } from './style';
+import { ButtonSizes, ButtonVariants } from '../theme';
 
-interface PropsButton {
-    text: string;
-    isEnabled: boolean;
-    handleClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  children: ReactNode;
+  variant?: ButtonVariants;
+  size?: ButtonSizes;
 }
 
-export default function Button({ handleClick, isEnabled, text }: PropsButton) {
-    return (
-
-        <button
-        onClick={handleClick}
-        disabled={!isEnabled} 
-        style={{
-          padding: "10px 20px",
-          backgroundColor: isEnabled ? "#4CAF50" : "#ccc",
-          color: "white",
-          border: "none",
-          borderRadius: "5px",
-          cursor: isEnabled ? "pointer" : "not-allowed"
-        }}
-      >
-        {text}
-      </button>
+const Button = ({
+  children,
+  variant = 'darkBlue',
+  size = 'normal',
+  ...rest
+}: ButtonProps) => {
+  return (
+    <StyledButton variant={variant} size={size} {...rest}>
+      {children}
+    </StyledButton>
   );
-}
+};
 
+export default Button;

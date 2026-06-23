@@ -6,6 +6,7 @@ export interface ITextProps {
   size: number;
   textAlign?: string;
   maxWidth?: number;
+  cursor?: string;
 }
 
 export const StyledText = styled.div<ITextProps>`
@@ -14,4 +15,11 @@ export const StyledText = styled.div<ITextProps>`
   font-size: ${(props) => props.size}px;
   text-align: ${(props) => props.textAlign || 'left'};
   ${(props) => props.maxWidth && `max-width: ${props.maxWidth}px;`}
+  ${(props) => props.cursor && `cursor: ${props.cursor};`}
+`;
+
+export const StyledLinkText = styled.b`
+  cursor: pointer;
+  text-decoration: underline;
+  color: ${colors.darkBlue};
 `;

@@ -6,13 +6,15 @@ export const spin = keyframes`
   to { transform: rotate(360deg); }
 `;
 
-export const LoadingContainer = styled.div`
+export const LoadingContainer = styled.div<{ isToast?: boolean }>`
   display: flex;
   width: fit-content;
+  position: relative;
   height: fit-content;
   align-items: center;
   justify-content: center;
-  borderradius: 100%;
+  border-radius: 100%;
+  left: ${({ isToast }) => (isToast ? 44 : 0)}px;
 `;
 
 export const amberGlow = keyframes`
@@ -33,7 +35,7 @@ export const MiniOuterSpinner = styled(Loader2)`
 `;
 
 export const InnerBulb = styled(Lightbulb)`
-  position: relative;
+  position: absolute;
   color: #b59410;
 
   animation: ${amberGlow} 2s ease-in-out infinite;
