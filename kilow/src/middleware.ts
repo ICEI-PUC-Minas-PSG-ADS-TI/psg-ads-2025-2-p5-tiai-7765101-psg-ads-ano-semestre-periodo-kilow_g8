@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  const publicRoutes = ['/login', '/register', '/deviceRegister', '/deviceList', '/deviceRegisterLink'];
+  const publicRoutes = ['/login', '/register'];
   const isPublicRoute = publicRoutes.includes(request.nextUrl.pathname);
 
   const token = request.cookies.get('auth-token')?.value;

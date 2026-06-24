@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Header from '@/components/header';
 import Button from '@/components/button';
 import { extractWattsFromUrlAction } from '@/actions/device';
 
@@ -89,7 +88,6 @@ export default function CadastroLink() {
 
   return (
     <PageWrapper>
-      <Header />
 
       <Card>
         <CardHeader>

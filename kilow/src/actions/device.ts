@@ -47,6 +47,7 @@ export const createDeviceAction = async (
   request: CreateDeviceRequest,
 ): Promise<CreateDeviceResponse> => {
   try {
+    console.log("Entrou na action de criar dispositivo");
     const headers = await getAuthHeader();
     const { data } = await api.post('/devices/register', request, { headers });
 
@@ -122,7 +123,7 @@ export const extractWattsFromUrlAction = async (
 ): Promise<ExtractWattsResponse> => {
   try {
     const headers = await getAuthHeader();
-    
+    console.log("Entrou na action de extrair watts");
     // ➔ ADICIONADO: Caminho completo /ia/getWatts configurado para bater com o Swagger
     const { data } = await api.post('/ia/getWatts', { url }, { headers });
 

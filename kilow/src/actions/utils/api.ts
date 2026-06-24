@@ -12,10 +12,12 @@ const api = axios.create({
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    console.log("Interceptou a URL")
     if (
       (error.response?.status === 401 && typeof window !== 'undefined') ||
       error.response?.status === 403
     ) {
+      console.log("entrou no erro");
       window.location.href = APP_PATHS.LOGIN;
     }
     return Promise.reject(error);
@@ -23,6 +25,7 @@ api.interceptors.response.use(
 );
 
 api.interceptors.request.use(async (config) => {
+  console.log("Interceptou a URL");
   if (typeof window === 'undefined') {
     const { cookies } = await import('next/headers');
     const cookieStore = await cookies();

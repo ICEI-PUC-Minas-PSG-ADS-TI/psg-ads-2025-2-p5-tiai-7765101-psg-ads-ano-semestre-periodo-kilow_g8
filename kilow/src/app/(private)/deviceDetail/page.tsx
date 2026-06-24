@@ -1,7 +1,6 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import Header from '@/components/header';
 import Button from '@/components/button';
 
 import {
@@ -82,8 +81,6 @@ export default function DeviceDetail() {
 
   return (
     <PageWrapper>
-      <Header />
-
       <ContentGrid>
         {/* ── Coluna esquerda ── */}
         <LeftColumn>

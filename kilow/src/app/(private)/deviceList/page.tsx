@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Header from '@/components/header';
 import DescriptionPage from '@/components/descriptionPage';
 import SearchInput from '@/components/searchInput';
 import Button from '@/components/button';
@@ -151,7 +150,6 @@ export default function DeviceList() {
 
   return (
     <PageWrapper>
-      <Header />
 
       {/* Resumo + botões de cadastro */}
       <DivDescription>

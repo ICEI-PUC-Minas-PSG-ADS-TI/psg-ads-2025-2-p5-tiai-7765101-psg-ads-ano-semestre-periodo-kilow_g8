@@ -19,17 +19,28 @@ export const getAllDevicesAction = async (): Promise<any> => {
   }
 };
 
-// // Cadastrar novo dispositivo
-// export const createDeviceAction = async (
-//   request: any
-// ): Promise<any> => {
-//   try {
-//     const { data } = await api.post(`${deviceURL}/register`, request);
-//     return { success: true, newDevice: data };
-//   } catch (error) {
-//     return handleActionError(error);
-//   }
-// };
+// Cadastrar novo dispositivo
+export const createDeviceAction = async (
+  request: any
+): Promise<any> => {
+  try {
+    const { data } = await api.post(`${deviceURL}/register`, request);
+    return { success: true, newDevice: data };
+  } catch (error) {
+    return handleActionError(error);
+  }
+};
+
+// Extrair potência e nome através do Link (IA)
+export const extractWattsFromUrlAction = async (url: string): Promise<any> => {
+  try {
+    // A rota '/ia/getWatts' deve bater com o endpoint do seu back-end Java
+    const { data } = await api.post('/ia/getWatts', { url });
+    return { success: true, deviceData: data };
+  } catch (error) {
+    return handleActionError(error);
+  }
+};
 
 // // Atualizar dispositivo existente
 // export const updateDeviceAction = async (

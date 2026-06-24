@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import Header from '@/components/header';
 import Button from '@/components/button';
 import CardDevice from '@/components/cardDevice/index';
+
+// 🔥 Importe a sua action diretamente dos serviços/ações
+import { createDeviceAction } from '@/actions/device'; 
 
 import {
   PageWrapper,
@@ -85,43 +87,38 @@ export default function CadastroDispositivo() {
     Number(form.usoHorasDia) > 0 &&
     Number(form.usoDiasSemana) > 0;
 
+  // 🔥 Nova função handleSave integrada com a Action
   const handleSave = async () => {
     if (!isFormValid) return;
 
     setLoading(true);
 
     try {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080';
-
       const payload = {
         nome: form.nome,
+        // Certifique-se de que as chaves batem com a interface CreateDeviceRequest do seu back-end
+        categorie: form.categoria, 
         consumoWatts: parseFloat(form.consumoWatts),
         usoMinutosHorasDia: parseInt(form.usoHorasDia, 10),
         usoDiasSemana: parseInt(form.usoDiasSemana, 10),
+        consumoMensalKwh: 0, // Adicione caso o seu DTO exija este campo obrigatório
       };
 
-      const token = localStorage.getItem('token') || '';
+      console.log('Enviando payload para a Action:', payload);
 
-      const response = await fetch(`${API_URL}/devices/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': token ? `Bearer ${token}` : '',
-        },
-        body: JSON.stringify(payload),
-      });
+      // Chamando a sua action configurada
+      const response = await createDeviceAction(payload as any);
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Erro ao cadastrar dispositivo');
+      console.log('Resposta da Action:', response);
+
+      if (response.success) {
+        alert(response.message?.description || 'Dispositivo cadastrado com sucesso!');
+        router.push('/deviceList');
+      } else {
+        alert(response.message?.description || 'Erro ao cadastrar dispositivo.');
       }
-
-      const data = await response.json();
-      console.log('Dispositivo criado com sucesso:', data);
-
-      router.push('/deviceList');
     } catch (error: any) {
-      alert(error.message || 'Erro de conexão com o servidor.');
+      alert('Erro inesperado de conexão com o servidor.');
     } finally {
       setLoading(false);
     }
@@ -135,8 +132,6 @@ export default function CadastroDispositivo() {
 
   return (
     <PageWrapper>
-      <Header />
-
       <PageTitle>Novo dispositivo</PageTitle>
       <PageSubtitle>
         Preencha os dados do aparelho para calcular seu consumo e custo mensal
