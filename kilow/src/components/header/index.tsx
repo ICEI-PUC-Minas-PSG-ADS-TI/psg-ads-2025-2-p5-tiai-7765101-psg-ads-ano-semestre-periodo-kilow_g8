@@ -63,20 +63,20 @@ const Header = () => {
 
           const isLastIHeaderLink = index === headerLinks.length - 1;
           return (
-            <>
-              <LinkRouteDiv href={headerLink.path} key={headerLink.path}>
+            <div key={headerLink.path}>
+              <LinkRouteDiv href={headerLink.path} >
                 <LinkRouteText
                   color={isSelected ? 'yellow' : 'white'}
                   weight={isSelected ? 700 : 400}
                   size={16}
-                  isSelected={isSelected}
+                  $isSelected={isSelected}
                 >
                   {headerLink.label}
                 </LinkRouteText>
               </LinkRouteDiv>
 
               {!isLastIHeaderLink && <VerticalLine />}
-            </>
+            </div>
           );
         })}
       </div>

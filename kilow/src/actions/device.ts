@@ -2,8 +2,7 @@
 
 import { AxiosError } from 'axios';
 import { cookies } from 'next/headers';
-import { api } from './auth';
-
+import api from './utils/api';
 
 interface CreateDeviceRequest {
   nome: string;
@@ -99,6 +98,52 @@ export const getAllDevicesAction = async (): Promise<GetAllDevicesResponse> => {
           title: 'Algo saiu errado :(',
           description:
             error.response?.data?.message || 'Erro ao buscar dispositivos',
+        },
+      };
+    }
+    return {
+      message: {
+        title: 'Algo saiu errado :(',
+        description: 'Tente novamente mais tarde',
+      },
+    };
+  }
+};
+
+export interface ExtractWattsResponse {
+  success?: boolean;
+  watts?: number;
+  wattsSugerido?: number;
+  message?: { title: string; description: string };
+}
+
+export const extractWattsFromUrlAction = async (
+  url: string,
+): Promise<ExtractWattsResponse> => {
+  try {
+    const headers = await getAuthHeader();
+    
+    // ➔ ADICIONADO: Caminho completo /ia/getWatts configurado para bater com o Swagger
+    const { data } = await api.post('/ia/getWatts', { url }, { headers });
+
+    return {
+      success: true,
+      watts: data.consumoWattsEncontrado,
+      wattsSugerido: data.consumoWattsSugeridoIA,
+      message: {
+        title: 'Potência extraída!',
+        description: 'Consumo extraído com sucesso do link.',
+      },
+    };
+  } catch (error: any) {
+    console.error("DETALHE DO ERRO DA IA (Backend):", error.response?.data || error.message);
+    
+    if (error instanceof AxiosError) {
+      return {
+        message: {
+          title: 'Erro ao extrair',
+          description:
+            error.response?.data?.message || 'Não foi possível ler a potência do link.',
         },
       };
     }

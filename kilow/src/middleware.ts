@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export function proxy(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const publicRoutes = ['/login', '/register', '/deviceRegister', '/deviceList', '/deviceRegisterLink'];
   const isPublicRoute = publicRoutes.includes(request.nextUrl.pathname);
 

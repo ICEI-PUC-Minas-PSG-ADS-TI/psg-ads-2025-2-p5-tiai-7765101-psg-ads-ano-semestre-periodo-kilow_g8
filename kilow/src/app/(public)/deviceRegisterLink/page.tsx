@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Header from '@/components/header';
 import Button from '@/components/button';
+import { extractWattsFromUrlAction } from '@/actions/device';
 
 import {
   PageWrapper,
@@ -36,23 +37,61 @@ const EXAMPLES = ['Exemplo: Monitor LG', 'Exemplo: PC Gamer'];
 export default function CadastroLink() {
   const router = useRouter();
   const [url, setUrl] = useState('');
-  const [currentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(1);
+  const [loading, setLoading] = useState(false);
+  
+  // Estado para verificar se o componente já foi montado no navegador
+  const [isMounted, setIsMounted] = useState(false);
 
-  const handleAnalyze = () => {
-    // TODO: conectar com a action de análise por IA
-    console.log('Analisar URL:', url);
+  // Efeito para preencher o formulário caso venham parâmetros via URL do cadastro por link
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+
+  const handleAnalyze = async () => {
+    if (!url.trim()) return;
+
+    setLoading(true);
+    setCurrentStep(2);
+
+    const result = await extractWattsFromUrlAction(url);
+    setLoading(false);
+
+    console.log('RESPOSTA DA IA:', result);
+
+    if (result.success) {
+      const potenciaEncontrada = result.watts ?? 0;
+      const potenciaSugerida = result.wattsSugerido ?? 0;
+      const potenciaFinal = potenciaEncontrada > 0 ? potenciaEncontrada : potenciaSugerida;
+
+      alert(`Sucesso! Potência extraída: ${potenciaFinal}W`);
+      router.push(`/deviceRegister?potencia=${potenciaFinal}`);
+    } else {
+      alert(result.message?.description || 'Ocorreu um erro ao processar a URL. Tente novamente.');
+      setCurrentStep(1);
+    }
   };
 
   const handleExample = (example: string) => {
-    setUrl(`https://www.amazon.com.br/${example.replace('Exemplo: ', '').replace(' ', '-')}...`);
+    if (example.includes('Monitor LG')) {
+      setUrl('https://www.amazon.com.br/Monitor-LG-27-Full-HD/dp/B099777N3Q');
+    } else if (example.includes('PC Gamer')) {
+      setUrl('https://www.kabum.com.br/produto/475485/computador-gamer-facil-intel-core-i5-16gb-ram-ssd-480gb-preto');
+    }
   };
+
+  // Evita a renderização do HTML até que a página esteja carregada no cliente (evita Hydration Mismatch)
+  if (!isMounted) {
+    return null; 
+  }
 
   return (
     <PageWrapper>
       <Header />
 
       <Card>
-        {/* Cabeçalho do card */}
         <CardHeader>
           <CardIcon>🔗</CardIcon>
           <div>
@@ -61,7 +100,6 @@ export default function CadastroLink() {
           </div>
         </CardHeader>
 
-        {/* Stepper */}
         <StepRow>
           {STEPS.map((step, index) => (
             <div key={step.number} style={{ display: 'flex', alignItems: 'center' }}>
@@ -76,7 +114,6 @@ export default function CadastroLink() {
           ))}
         </StepRow>
 
-        {/* Formulário */}
         <FormGroup>
           <FormLabel>Link do produto (Amazon, Kabum, Pichau...)</FormLabel>
           <UrlRow>
@@ -85,12 +122,18 @@ export default function CadastroLink() {
               placeholder="https://www.amazon.com.br/Monitor-LG..."
               value={url}
               onChange={(e) => setUrl(e.target.value)}
+              disabled={loading}
             />
-            <Button isEnabled={url.trim().length > 0} handleClick={handleAnalyze} text="Analisar" />
+            
+            <Button 
+              disabled={url.trim().length === 0 || loading} 
+              onClick={handleAnalyze}
+            >
+              {loading ? 'Analisando...' : 'Analisar'}
+            </Button>
           </UrlRow>
         </FormGroup>
 
-        {/* Chips de exemplo */}
         <ExamplesRow>
           {EXAMPLES.map((ex) => (
             <ExampleChip key={ex} onClick={() => handleExample(ex)}>
@@ -99,9 +142,10 @@ export default function CadastroLink() {
           ))}
         </ExamplesRow>
 
-        {/* Rodapé com botão de voltar */}
         <div>
-          <Button isEnabled={true} handleClick={() => router.push('/deviceList')} text="Cancelar" />
+          <Button onClick={() => router.push('/deviceList')}>
+            Cancelar
+          </Button>
         </div>
       </Card>
     </PageWrapper>

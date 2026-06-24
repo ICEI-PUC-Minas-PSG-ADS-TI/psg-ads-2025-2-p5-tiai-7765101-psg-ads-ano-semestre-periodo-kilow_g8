@@ -4,7 +4,7 @@ import { colors } from '../theme';
 import { ITextProps, StyledText } from '@/components/text';
 
 interface ILinkRouteText extends ITextProps {
-  isSelected: boolean;
+  $isSelected: boolean;
 }
 
 export const LinkRouteDiv = styled(Link)`
@@ -19,7 +19,7 @@ export const LinkRouteDiv = styled(Link)`
 `;
 
 export const LinkRouteText = styled(StyledText)<ILinkRouteText>`
-  ${(props) => props.isSelected && `background-color: ${colors.yellow}33`};
+  ${(props) => props.$isSelected && `background-color: ${colors.yellow}33`};
   border-radius: 10px;
   padding: 6px 12px 6px 12px;
 `;

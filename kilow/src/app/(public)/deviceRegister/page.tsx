@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Header from '@/components/header';
 import Button from '@/components/button';
 import CardDevice from '@/components/cardDevice/index';
@@ -54,8 +54,23 @@ const initialForm: FormState = {
 
 export default function CadastroDispositivo() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [form, setForm] = useState<FormState>(initialForm);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const nomeUrl = searchParams.get('nome') || '';
+    const potenciaUrl = searchParams.get('potencia') || '';
+
+    if (nomeUrl || potenciaUrl) {
+      setForm((prev) => ({
+        ...prev,
+        nome: nomeUrl || prev.nome,
+        consumoWatts: potenciaUrl || prev.consumoWatts,
+      }));
+    }
+  }, [searchParams]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -76,20 +91,16 @@ export default function CadastroDispositivo() {
     setLoading(true);
 
     try {
-      // Ajuste a URL base se o seu backend estiver em outra porta ou domínio
-      const API_URL = 'http://localhost:8080';
+      const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080';
 
-      // Monta o payload que o seu @PostMapping("/register") espera receber no corpo (RequestBody)
       const payload = {
         nome: form.nome,
         consumoWatts: parseFloat(form.consumoWatts),
-        // Certifique-se de enviar o dado de tempo exatamente como o seu back-end (@Valid) espera
         usoMinutosHorasDia: parseInt(form.usoHorasDia, 10),
         usoDiasSemana: parseInt(form.usoDiasSemana, 10),
       };
 
-      // Se você utiliza autenticação por token (ex: Bearer), lembre-se de adicionar o header de autorização
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || '';
 
       const response = await fetch(`${API_URL}/devices/register`, {
         method: 'POST',
@@ -108,7 +119,6 @@ export default function CadastroDispositivo() {
       const data = await response.json();
       console.log('Dispositivo criado com sucesso:', data);
 
-      // Redireciona para a listagem após o sucesso
       router.push('/deviceList');
     } catch (error: any) {
       alert(error.message || 'Erro de conexão com o servidor.');
@@ -117,7 +127,6 @@ export default function CadastroDispositivo() {
     }
   };
 
-  // Valores para o preview
   const previewName = form.nome.trim() || 'Novo dispositivo';
   const previewCategory = form.categoria || 'Computadores';
   const previewPower = Number(form.consumoWatts) || 0;
@@ -134,10 +143,8 @@ export default function CadastroDispositivo() {
       </PageSubtitle>
 
       <ContentGrid>
-        {/* ── Coluna esquerda: formulário ── */}
         <LeftColumn>
           <FormCard>
-            {/* Nome */}
             <FormGroup>
               <FormLabel htmlFor="nome">Nome do dispositivo</FormLabel>
               <FormInput
@@ -150,7 +157,6 @@ export default function CadastroDispositivo() {
               />
             </FormGroup>
 
-            {/* Categoria */}
             <FormGroup>
               <FormLabel htmlFor="categoria">Categoria</FormLabel>
               <FormSelect
@@ -170,7 +176,6 @@ export default function CadastroDispositivo() {
               </FormSelect>
             </FormGroup>
 
-            {/* Potência */}
             <FormGroup>
               <FormLabel htmlFor="consumoWatts">Potência (W)</FormLabel>
               <FormInput
@@ -187,7 +192,6 @@ export default function CadastroDispositivo() {
               </FormHint>
             </FormGroup>
 
-            {/* Uso diário + dias por semana lado a lado */}
             <FormRow>
               <FormGroup>
                 <FormLabel htmlFor="usoHorasDia">Horas de uso por dia</FormLabel>
@@ -237,7 +241,6 @@ export default function CadastroDispositivo() {
           </FooterRow>
         </LeftColumn>
 
-        {/* ── Coluna direita: preview em tempo real ── */}
         <RightColumn>
           <PreviewCard>
             <PreviewTitle>Pré-visualização</PreviewTitle>

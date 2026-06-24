@@ -19,39 +19,39 @@ export const getAllDevicesAction = async (): Promise<any> => {
   }
 };
 
-// Cadastrar novo dispositivo
-export const createDeviceAction = async (
-  request: any
-): Promise<any> => {
-  try {
-    const { data } = await api.post(`${deviceURL}/register`, request);
-    return { success: true, newDevice: data };
-  } catch (error) {
-    return handleActionError(error);
-  }
-};
+// // Cadastrar novo dispositivo
+// export const createDeviceAction = async (
+//   request: any
+// ): Promise<any> => {
+//   try {
+//     const { data } = await api.post(`${deviceURL}/register`, request);
+//     return { success: true, newDevice: data };
+//   } catch (error) {
+//     return handleActionError(error);
+//   }
+// };
 
-// Atualizar dispositivo existente
-export const updateDeviceAction = async (
-  id: number, 
-  request: any
-): Promise<any> => {
-  try {
-    const { data } = await api.put(`${deviceURL}/update/${id}`, request);
-    return { success: true, updatedDevice: data };
-  } catch (error) {
-    return handleActionError(error);
-  }
-};
+// // Atualizar dispositivo existente
+// export const updateDeviceAction = async (
+//   id: number, 
+//   request: any
+// ): Promise<any> => {
+//   try {
+//     const { data } = await api.put(`${deviceURL}/update/${id}`, request);
+//     return { success: true, updatedDevice: data };
+//   } catch (error) {
+//     return handleActionError(error);
+//   }
+// };
 
-// Deletar dispositivo
-export const deleteDeviceAction = async (
-  id: number
-): Promise<ActionResponse> => {
-  try {
-    await api.delete(`${deviceURL}/delete/${id}`);
-    return { success: true };
-  } catch (error) {
-    return handleActionError(error);
-  }
-};
+// // Deletar dispositivo
+// export const deleteDeviceAction = async (
+//   id: number
+// ): Promise<ActionResponse> => {
+//   try {
+//     await api.delete(`${deviceURL}/delete/${id}`);
+//     return { success: true };
+//   } catch (error) {
+//     return handleActionError(error);
+//   }
+// };
