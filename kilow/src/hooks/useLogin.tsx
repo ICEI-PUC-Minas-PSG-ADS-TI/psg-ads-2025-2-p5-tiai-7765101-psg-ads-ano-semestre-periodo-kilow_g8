@@ -15,9 +15,9 @@ export const useLogin = () => {
     setSenha('');
   };
 
-  const handleLogin = async (e?: React.SubmitEvent<HTMLFormElement>) => {
+const handleLogin = async (e?: React.FormEvent<HTMLFormElement>) => {
     e?.preventDefault();
-
+    
     if (!email || !senha) {
       showError(
         'Preencha todos os campos e tente novamente ;)',

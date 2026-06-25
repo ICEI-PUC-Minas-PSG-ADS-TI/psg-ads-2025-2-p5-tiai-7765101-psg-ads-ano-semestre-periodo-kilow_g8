@@ -44,11 +44,10 @@ const initialForm: FormState = {
 export default function CadastroDispositivo() {
   const router = useRouter();
   const searchParams = useSearchParams();
-
   const [form, setForm] = useState<FormState>(initialForm);
+
   const [loading, setLoading] = useState(false);
   
-  // ➔ Estado dinâmico para a tarifa, inicializado com 0.75
   const [ratePerKwh, setRatePerKwh] = useState(0.75);
 
   useEffect(() => {
@@ -64,15 +63,16 @@ export default function CadastroDispositivo() {
         }));
       }
 
-      // ➔ Busca a tarifa efetiva salva na conta mais recente para sincronizar o preview
       try {
         const billingsResult = await getBillingsListAction();
+
         if (billingsResult.success && billingsResult.content?.contas?.length) {
           const contasArray = billingsResult.content.contas;
-          const lastContar = contasArray[contasArray.length - 1];
+          const lastConta = contasArray[contasArray.length - 1];
           
-          if (lastContar && lastContar.tarifaEfetiva) {
-            setRatePerKwh(lastContar.tarifaEfetiva);
+
+          if (lastConta && lastConta.tarifaEfetiva) {
+            setRatePerKwh(lastConta.tarifaEfetiva);
           }
         }
       } catch (error) {
@@ -103,7 +103,6 @@ export default function CadastroDispositivo() {
     try {
       const payload = {
         nome: form.nome.trim(),
-        // ➔ Alterado de parseFloat/Number para forçar o formato decimal que o Java espera
         consumoWatts: parseFloat(form.consumoWatts) ? parseFloat(form.consumoWatts) : 0.0,
         usoMinutosHorasDia: parseInt(form.usoHorasDia, 10),
         usoDiasSemana: parseInt(form.usoDiasSemana, 10),

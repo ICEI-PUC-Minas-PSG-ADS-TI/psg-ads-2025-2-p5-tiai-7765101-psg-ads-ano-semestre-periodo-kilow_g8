@@ -42,7 +42,6 @@ import {
   TipText,
 } from './stye';
 
-// Exemplo de interface para tipar os dispositivos
 interface Device {
   id: number;
   nome: string;
@@ -62,7 +61,6 @@ function getInitials(name: string): string {
   return name.split(' ').slice(0, 2).map((w) => w.charAt(0).toUpperCase()).join('');
 }
 
-// Função utilitária para gerar cor aleatória ou baseada em categoria
 function stringToColor(str: string) {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
@@ -76,7 +74,6 @@ function stringToColor(str: string) {
   return color;
 }
 
-// 🔥 Função para gerar dicas e orientações baseadas no nome ou categoria do aparelho
 function getDeviceInsight(nome: string, categoria: string, custoMensal: number) {
   const lowerName = nome.toLowerCase();
   const lowerCategory = categoria.toLowerCase();
@@ -102,7 +99,6 @@ function getDeviceInsight(nome: string, categoria: string, custoMensal: number) 
     };
   }
 
-  // Dica padrão para dispositivos gerais
   return {
     title: 'Dica de economia',
     text: `Optar por desligar este aparelho quando não estiver em uso pode reduzir sua conta e gerar uma economia visível ao longo do ano.`,
@@ -116,7 +112,6 @@ export default function DeviceDetail() {
   const [device, setDevice] = useState<Device | null>(null);
 
   useEffect(() => {
-    // Busca a lista completa que foi salva no localStorage ou na listagem
     const storedDevices = localStorage.getItem('devices');
     if (storedDevices) {
       const devicesList: Device[] = JSON.parse(storedDevices);
@@ -126,6 +121,7 @@ export default function DeviceDetail() {
     }
   }, [searchParams]);
 
+
   if (!device) {
     return (
       <PageWrapper>
@@ -134,7 +130,6 @@ export default function DeviceDetail() {
     );
   }
 
-  // Cálculos baseados nos dados reais do dispositivo
   const kwhMonth = (device.consumoWatts / 1000) * device.usoMinutosHorasDia * device.usoDiasSemana * WEEKS_PER_MONTH;
   const costDay = (kwhMonth / 30) * RATE_PER_KWH;
   const costMonth = kwhMonth * RATE_PER_KWH;
@@ -144,8 +139,7 @@ export default function DeviceDetail() {
 
   const insight = getDeviceInsight(device.nome, device.categorie || '', costMonth);
 
-  // Impacto ambiental simulado de forma proporcional ao consumo
-  const co2Emissions = (kwhMonth * 0.52).toFixed(2); // Fator de emissão SIN (Sistema Interligado Nacional) aproximado
+  const co2Emissions = (kwhMonth * 0.52).toFixed(2); 
   const equivalentKm = (kwhMonth * 5.8).toFixed(0);
   const treesNeeded = (kwhMonth * 0.04).toFixed(1);
 
@@ -171,14 +165,12 @@ export default function DeviceDetail() {
               </DeviceInfo>
 
               <ActionRow>
-                {/* Botão de Editar */}
                 <Button
                   onClick={() => router.push(`/deviceRegister?id=${device.id}`)}
                 >
                   Editar
                 </Button>
 
-                {/* Botão de Voltar */}
                 <Button
                   onClick={() => router.push('/deviceList')}
                 >
@@ -227,7 +219,6 @@ export default function DeviceDetail() {
           </CostCard>
         </LeftColumn>
 
-        {/* ── Coluna direita ── */}
         <RightColumn>
           <ImpactCard>
             <ImpactTitle>Impacto ambiental</ImpactTitle>

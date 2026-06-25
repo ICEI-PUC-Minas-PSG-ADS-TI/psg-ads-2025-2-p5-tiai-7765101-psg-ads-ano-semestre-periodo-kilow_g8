@@ -51,8 +51,7 @@ export default function DeviceList() {
   const [filteredDevices, setFilteredDevices] = useState<IDevice[]>([]);
   const [valueSearch, setValueSearch] = useState('');
   const [error, setError] = useState<string | null>(null);
-  
-  // ➔ Estado dinâmico para a tarifa, lido da listagem de contas
+
   const [kilowattPrice, setKilowattPrice] = useState(0.75); 
   const [loading, setLoading] = useState(false);
 
@@ -68,13 +67,10 @@ export default function DeviceList() {
 
       setLoading(true);
       try {
-        // Busca os dispositivos da API
         const devicesResult = await getAllDevicesAction();
         
-        // ➔ Busca as faturas/contas utilizando a service existente
         const billingsResult = await getBillingsListAction();
 
-        // Verifica se o retorno possui contas e pega a 'tarifaEfetiva' da última conta cadastrada
         if (billingsResult.success && billingsResult.content?.contas?.length) {
           const contasArray = billingsResult.content.contas;
           const lastContar = contasArray[contasArray.length - 1];
@@ -101,7 +97,6 @@ export default function DeviceList() {
     fetchInitialData();
   }, []);
 
-  // Função de cálculo que utiliza o kilowattPrice atualizado pela conta
   const calcMonthlyCost = (
     watts: number,
     hoursPerDay: number,
@@ -113,6 +108,7 @@ export default function DeviceList() {
     let custoTotal = valorConvertidoParaWhats * kilowattPrice;
     return custoTotal;
   };
+
 
   const applyFilters = (search: string) => {
     let result = devices;

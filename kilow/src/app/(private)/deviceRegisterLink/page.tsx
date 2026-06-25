@@ -40,10 +40,11 @@ export default function CadastroLink() {
   const [loading, setLoading] = useState(false);
   
   // Estado para verificar se o componente já foi montado no navegador
+  //Porque precisa desse estado?
   const [isMounted, setIsMounted] = useState(false);
 
   // Efeito para preencher o formulário caso venham parâmetros via URL do cadastro por link
-
+//Essa é a conexão com o registerDevice, certo? Pois eu coloco o link e me redireciona para a página de cadastro do dispostivo com a potência já preenchida
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -55,11 +56,15 @@ export default function CadastroLink() {
     setLoading(true);
     setCurrentStep(2);
 
+    //Extraio as informações da API
     const result = await extractWattsFromUrlAction(url);
     setLoading(false);
 
     console.log('RESPOSTA DA IA:', result);
 
+    //O que a API me retonna?
+    //a potência encontrada, ou a potência sugerida e, por fim, a última
+    //mas porque eu preciso de 3 variáveis para armazenar essas informações?
     if (result.success) {
       const potenciaEncontrada = result.watts ?? 0;
       const potenciaSugerida = result.wattsSugerido ?? 0;
@@ -67,12 +72,15 @@ export default function CadastroLink() {
 
       alert(`Sucesso! Potência extraída: ${potenciaFinal}W`);
       router.push(`/deviceRegister?potencia=${potenciaFinal}`);
+      //envio como parâmetro para deviceRegister
+      //deivceRegister então puxa a potência via useSearchPRAM S
     } else {
       alert(result.message?.description || 'Ocorreu um erro ao processar a URL. Tente novamente.');
       setCurrentStep(1);
     }
   };
 
+  //Função para o usuário escolher o exemplo caso deseje
   const handleExample = (example: string) => {
     if (example.includes('Monitor LG')) {
       setUrl('https://www.amazon.com.br/Monitor-LG-27-Full-HD/dp/B099777N3Q');
