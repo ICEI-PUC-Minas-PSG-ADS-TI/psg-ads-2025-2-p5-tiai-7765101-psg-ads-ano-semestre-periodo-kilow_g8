@@ -4,6 +4,7 @@ export const APP_PATHS = {
   HOME: '/home',
   BILLINGS: '/billings',
   DEVICES: '/devices',
+  DEVICE_LIST: '/deviceList', // ➔ Adicionado para apontar corretamente à sua listagem
   DEVICE_REGISTER: '/deviceRegister',
   DEVICE_REGISTER_LINK: '/deviceRegisterLink',
   DEVICE_DETAIL: '/deviceDetail',
@@ -21,6 +22,10 @@ export const APP_ROUTES = {
   devices: {
     label: 'Dispositivos',
     path: APP_PATHS.DEVICES,
+  },
+  deviceList: {
+    label: 'Lista de Dispositivos',
+    path: APP_PATHS.DEVICE_LIST, // ➔ Rota navegável correspondente
   },
   deviceRegister: {
     label: 'Cadastrar Dispositivo',

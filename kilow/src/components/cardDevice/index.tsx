@@ -5,7 +5,6 @@ import {
   AvatarBox,
   AvatarText,
   DeviceName,
-  CategoryLabel,
   BadgesRow,
   Badge,
   CostLabel,
@@ -13,7 +12,6 @@ import {
 
 interface CardDeviceProps {
   name: string;
-  category: string;
   power: number; // em Watts
   hoursPerDay: number; // horas por dia
   daysPerWeek: number; // dias por semana (exibido como "X dias")
@@ -28,20 +26,6 @@ function getInitials(name: string): string {
     .slice(0, 2)
     .map((w) => w.charAt(0).toUpperCase())
     .join('');
-}
-
-/** Paleta de cores por categoria */
-const categoryColors: Record<string, string> = {
-  Computadores: '#3b5bdb',
-  Climatização: '#1098ad',
-  Monitores: '#0ca678',
-  Monitores2: '#37b24d',
-  Áudio: '#f76707',
-  Redes: '#d6336c',
-};
-
-function getAvatarColor(category: string): string {
-  return categoryColors[category] ?? '#868e96';
 }
 
 /** Calcula custo mensal em R$ */
@@ -59,7 +43,6 @@ function calcMonthlyCost(
 
 export default function CardDevice({
   name,
-  category,
   power,
   hoursPerDay,
   daysPerWeek,
@@ -67,7 +50,6 @@ export default function CardDevice({
   onClick,
 }: CardDeviceProps) {
   const initials = getInitials(name);
-  const avatarColor = getAvatarColor(category);
   const monthlyCost = calcMonthlyCost(
     power,
     hoursPerDay,
@@ -84,12 +66,12 @@ export default function CardDevice({
       onClick={onClick}
       style={{ cursor: onClick ? 'pointer' : 'default' }}
     >
-      <AvatarBox $color={avatarColor}>
+      {/* O avatar permanece usando uma cor neutra ou fixa (definida no styled-components) */}
+      <AvatarBox $color="#868e96">
         <AvatarText>{initials}</AvatarText>
       </AvatarBox>
 
       <DeviceName>{name}</DeviceName>
-      <CategoryLabel>{category}</CategoryLabel>
 
       <BadgesRow>
         <Badge>{power}W</Badge>

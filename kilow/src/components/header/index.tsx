@@ -9,7 +9,7 @@ const Header = () => {
   const pathName = usePathname();
   const headerLinks = [
     APP_ROUTES.billings,
-    APP_ROUTES.devices,
+    APP_ROUTES.deviceList,
     APP_ROUTES.home,
   ];
 

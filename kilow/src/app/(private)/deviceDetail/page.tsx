@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Button from '@/components/button';
 
@@ -41,43 +42,112 @@ import {
   TipText,
 } from './stye';
 
-// MOCK — remover quando o back estiver disponível
-const mockDevices = [
-  { id: 1, nome: 'PC Desktop',     categoria: 'Computadores', consumoWatts: 300, usoHorasDia: 8,  usoDiasSemana: 5, cadastradoEm: '10/03/2025', maiorConsumidor: true,  avatarColor: '#3b5bdb' },
-  { id: 2, nome: 'Ar-cond. Split', categoria: 'Climatização', consumoWatts: 750, usoHorasDia: 3,  usoDiasSemana: 5, cadastradoEm: '10/03/2025', maiorConsumidor: false, avatarColor: '#1098ad' },
-  { id: 3, nome: 'Monitor LG 27"', categoria: 'Monitores',    consumoWatts: 65,  usoHorasDia: 8,  usoDiasSemana: 5, cadastradoEm: '11/03/2025', maiorConsumidor: false, avatarColor: '#0ca678' },
-  { id: 4, nome: 'Notebook Dell',  categoria: 'Computadores', consumoWatts: 45,  usoHorasDia: 8,  usoDiasSemana: 5, cadastradoEm: '11/03/2025', maiorConsumidor: false, avatarColor: '#3b5bdb' },
-  { id: 5, nome: 'Roteador WiFi',  categoria: 'Redes',        consumoWatts: 8,   usoHorasDia: 24, usoDiasSemana: 7, cadastradoEm: '12/03/2025', maiorConsumidor: false, avatarColor: '#d6336c' },
-  { id: 6, nome: 'Caixa de som',   categoria: 'Áudio',        consumoWatts: 20,  usoHorasDia: 4,  usoDiasSemana: 5, cadastradoEm: '12/03/2025', maiorConsumidor: false, avatarColor: '#f76707' },
-];
+// Exemplo de interface para tipar os dispositivos
+interface Device {
+  id: number;
+  nome: string;
+  categorie: string;
+  consumoWatts: number;
+  usoMinutosHorasDia: number;
+  usoDiasSemana: number;
+  maiorConsumidor?: boolean;
+  avatarColor?: string;
+  cadastradoEm?: string;
+}
 
 const RATE_PER_KWH = 0.78;
 const WEEKS_PER_MONTH = 4.33;
 
-const mockImpact = [
-  { icon: '🌿', value: '3,92 kg CO₂',     description: 'emissões mensais estimadas (SIN)' },
-  { icon: '🚗', value: '23 km de carro',   description: 'equivalente em emissões mensais'  },
-  { icon: '🌳', value: '0,2 árvore',       description: 'necessária para compensar/mês'    },
-];
-
 function getInitials(name: string): string {
   return name.split(' ').slice(0, 2).map((w) => w.charAt(0).toUpperCase()).join('');
+}
+
+// Função utilitária para gerar cor aleatória ou baseada em categoria
+function stringToColor(str: string) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  let color = '#';
+  for (let i = 0; i < 3; i++) {
+    const value = (hash >> (i * 8)) & 0xFF;
+    color += ('00' + value.toString(16)).substr(-2);
+  }
+  return color;
+}
+
+// 🔥 Função para gerar dicas e orientações baseadas no nome ou categoria do aparelho
+function getDeviceInsight(nome: string, categoria: string, custoMensal: number) {
+  const lowerName = nome.toLowerCase();
+  const lowerCategory = categoria.toLowerCase();
+
+  if (lowerName.includes('stand by') || lowerCategory.includes('standby')) {
+    return {
+      title: 'Atenção ao modo Stand-by',
+      text: 'Verifique os aparelhos em stand-by. Eles podem representar até 10% do consumo da sua conta de luz silenciosamente.',
+    };
+  }
+
+  if (lowerName.includes('fritadeira') || lowerName.includes('airfryer')) {
+    return {
+      title: 'Impacto do uso culinário',
+      text: `Sabia que uma Airfryer consome bastante energia rapidamente devido à sua alta potência? O custo estimado deste uso é de <strong>R$ ${custoMensal.toFixed(2).replace('.', ',')}</strong> por mês.`,
+    };
+  }
+
+  if (lowerName.includes('chuveiro') || lowerName.includes('descarga') || lowerName.includes('torneira')) {
+    return {
+      title: 'Dica de alto consumo',
+      text: 'Opte por banhos mais curtos ou aparelhos mais eficientes. A descarga e o chuveiro elétrico gastam muito também.',
+    };
+  }
+
+  // Dica padrão para dispositivos gerais
+  return {
+    title: 'Dica de economia',
+    text: `Optar por desligar este aparelho quando não estiver em uso pode reduzir sua conta e gerar uma economia visível ao longo do ano.`,
+  };
 }
 
 export default function DeviceDetail() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Lê o id da query: /deviceDetail?id=1
-  const idParam = searchParams.get('id');
-  const device = mockDevices.find((d) => d.id === Number(idParam)) ?? mockDevices[0];
+  const [device, setDevice] = useState<Device | null>(null);
 
-  const kwhMonth  = (device.consumoWatts / 1000) * device.usoHorasDia * device.usoDiasSemana * WEEKS_PER_MONTH;
-  const costDay   = (kwhMonth / 30) * RATE_PER_KWH;
+  useEffect(() => {
+    // Busca a lista completa que foi salva no localStorage ou na listagem
+    const storedDevices = localStorage.getItem('devices');
+    if (storedDevices) {
+      const devicesList: Device[] = JSON.parse(storedDevices);
+      const idParam = searchParams.get('id');
+      const found = devicesList.find((d) => d.id === Number(idParam)) || devicesList[0];
+      setDevice(found || null);
+    }
+  }, [searchParams]);
+
+  if (!device) {
+    return (
+      <PageWrapper>
+        <p>Carregando detalhes do dispositivo...</p>
+      </PageWrapper>
+    );
+  }
+
+  // Cálculos baseados nos dados reais do dispositivo
+  const kwhMonth = (device.consumoWatts / 1000) * device.usoMinutosHorasDia * device.usoDiasSemana * WEEKS_PER_MONTH;
+  const costDay = (kwhMonth / 30) * RATE_PER_KWH;
   const costMonth = kwhMonth * RATE_PER_KWH;
-  const costYear  = costMonth * 12;
+  const costYear = costMonth * 12;
 
   const fmt = (v: number) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+  const insight = getDeviceInsight(device.nome, device.categorie || '', costMonth);
+
+  // Impacto ambiental simulado de forma proporcional ao consumo
+  const co2Emissions = (kwhMonth * 0.52).toFixed(2); // Fator de emissão SIN (Sistema Interligado Nacional) aproximado
+  const equivalentKm = (kwhMonth * 5.8).toFixed(0);
+  const treesNeeded = (kwhMonth * 0.04).toFixed(1);
 
   return (
     <PageWrapper>
@@ -86,14 +156,14 @@ export default function DeviceDetail() {
         <LeftColumn>
           <DeviceCard>
             <DeviceTopRow>
-              <AvatarBox $color={device.avatarColor}>
+              <AvatarBox $color={device.avatarColor || stringToColor(device.nome)}>
                 <AvatarText>{getInitials(device.nome)}</AvatarText>
               </AvatarBox>
 
               <DeviceInfo>
                 <DeviceName>{device.nome}</DeviceName>
                 <DeviceMeta>
-                  {device.categoria} · Cadastrado {device.cadastradoEm}
+                  {device.categorie || 'Dispositivo'} · Cadastrado em {device.cadastradoEm || 'Sistema'}
                 </DeviceMeta>
                 {device.maiorConsumidor && (
                   <DeviceBadge>Maior consumidor</DeviceBadge>
@@ -101,18 +171,19 @@ export default function DeviceDetail() {
               </DeviceInfo>
 
               <ActionRow>
-                {/* Editar → deviceRegister com o id para pré-preencher o form */}
+                {/* Botão de Editar */}
                 <Button
-                  isEnabled={true}
-                  handleClick={() => router.push(`/deviceRegister?id=${device.id}`)}
-                  text="Editar"
-                />
-                {/* Voltar para a listagem */}
+                  onClick={() => router.push(`/deviceRegister?id=${device.id}`)}
+                >
+                  Editar
+                </Button>
+
+                {/* Botão de Voltar */}
                 <Button
-                  isEnabled={true}
-                  handleClick={() => router.push('/deviceList')}
-                  text="Voltar"
-                />
+                  onClick={() => router.push('/deviceList')}
+                >
+                  Voltar
+                </Button>
               </ActionRow>
             </DeviceTopRow>
 
@@ -122,7 +193,7 @@ export default function DeviceDetail() {
                 <StatLabel>Potência</StatLabel>
               </StatBadge>
               <StatBadge>
-                <StatValue>{device.usoHorasDia}h</StatValue>
+                <StatValue>{device.usoMinutosHorasDia}h</StatValue>
                 <StatLabel>por dia</StatLabel>
               </StatBadge>
               <StatBadge>
@@ -151,7 +222,7 @@ export default function DeviceDetail() {
             </CostRow>
 
             <CostNote>
-              Baseado na tarifa efetiva R$ {RATE_PER_KWH.toFixed(2).replace('.', ',')}/kWh (mar/2025)
+              Baseado na tarifa efetiva R$ {RATE_PER_KWH.toFixed(2).replace('.', ',')}/kWh
             </CostNote>
           </CostCard>
         </LeftColumn>
@@ -162,23 +233,34 @@ export default function DeviceDetail() {
             <ImpactTitle>Impacto ambiental</ImpactTitle>
             <ImpactSubtitle>Estimativas mensais baseadas no consumo médio</ImpactSubtitle>
 
-            {mockImpact.map((item) => (
-              <ImpactItemRow key={item.value}>
-                <ImpactIcon>{item.icon}</ImpactIcon>
-                <ImpactText>
-                  <ImpactValue>{item.value}</ImpactValue>
-                  <ImpactDescription>{item.description}</ImpactDescription>
-                </ImpactText>
-              </ImpactItemRow>
-            ))}
+            <ImpactItemRow>
+              <ImpactIcon>🌿</ImpactIcon>
+              <ImpactText>
+                <ImpactValue>{co2Emissions} kg CO₂</ImpactValue>
+                <ImpactDescription>emissões mensais estimadas (SIN)</ImpactDescription>
+              </ImpactText>
+            </ImpactItemRow>
+
+            <ImpactItemRow>
+              <ImpactIcon>🚗</ImpactIcon>
+              <ImpactText>
+                <ImpactValue>{equivalentKm} km de carro</ImpactValue>
+                <ImpactDescription>equivalente em emissões mensais</ImpactDescription>
+              </ImpactText>
+            </ImpactItemRow>
+
+            <ImpactItemRow>
+              <ImpactIcon>🌳</ImpactIcon>
+              <ImpactText>
+                <ImpactValue>{treesNeeded} árvore</ImpactValue>
+                <ImpactDescription>necessária para compensar/mês</ImpactDescription>
+              </ImpactText>
+            </ImpactItemRow>
           </ImpactCard>
 
           <TipCard>
-            <TipTitle>Dica de economia</TipTitle>
-            <TipText>
-              Habilitar suspensão após 10 min de inatividade pode reduzir o consumo em até{' '}
-              <strong>15%</strong>, economizando <strong>{fmt(costMonth * 0.15)}/mês</strong>.
-            </TipText>
+            <TipTitle>{insight.title}</TipTitle>
+            <TipText dangerouslySetInnerHTML={{ __html: insight.text }} />
           </TipCard>
         </RightColumn>
       </ContentGrid>

@@ -6,8 +6,8 @@ import DescriptionPage from '@/components/descriptionPage';
 import SearchInput from '@/components/searchInput';
 import Button from '@/components/button';
 import CardDevice from '@/components/cardDevice/index';
-import SelectCategories from '@/components/selectCategories/index';
 import { getAllDevicesAction } from '@/actions/device';
+import { getBillingsListAction } from '@/actions/services/billing'; // ➔ Importada a service correta de faturas
 import { IDevice } from '@/actions/types/devices';
 
 import {
@@ -23,16 +23,12 @@ import {
   MagicLinkAction,
 } from './style';
 
-const kilowattPrice = 0.75; // R$/kWh — ajustar conforme tarifa real
-
-// Altere para false para conectar com a sua API (Spring Boot)
 const USE_MOCK = false; 
 
 const mockDevices: IDevice[] = [
   {
     id: 1,
     nome: 'PC Desktop',
-    categorie: 'Computadores',
     consumoWatts: 300,
     consumoMensalKwh: 2,
     usoMinutosHorasDia: 8,
@@ -41,7 +37,6 @@ const mockDevices: IDevice[] = [
   {
     id: 2,
     nome: 'Ar-cond. Split',
-    categorie: 'Climatização',
     consumoWatts: 750,
     consumoMensalKwh: 2,
     usoMinutosHorasDia: 3,
@@ -49,55 +44,77 @@ const mockDevices: IDevice[] = [
   },
 ];
 
-function calcMonthlyCost(
-  watts: number,
-  hoursPerDay: number,
-  daysPerWeek: number,
-): number {
-  let h = hoursPerDay * daysPerWeek;
-  let consumoMensalEmWatt = watts * h;
-  let valorConvertidoParaWhats = consumoMensalEmWatt / 1000;
-  let custoTotal = valorConvertidoParaWhats * kilowattPrice;
-  return custoTotal;
-}
-
 export default function DeviceList() {
   const router = useRouter();
 
   const [devices, setDevices] = useState<IDevice[]>([]);
   const [filteredDevices, setFilteredDevices] = useState<IDevice[]>([]);
   const [valueSearch, setValueSearch] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('Todas categorias');
   const [error, setError] = useState<string | null>(null);
   
+  // ➔ Estado dinâmico para a tarifa, lido da listagem de contas
+  const [kilowattPrice, setKilowattPrice] = useState(0.75); 
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchDevices = async () => {
+    const fetchInitialData = async () => {
       if (USE_MOCK) {
         await new Promise((resolve) => setTimeout(resolve, 500));
         setDevices(mockDevices);
         setFilteredDevices(mockDevices);
+        localStorage.setItem('devices', JSON.stringify(mockDevices));
         return;
       }
 
       setLoading(true);
-      const result = await getAllDevicesAction();
-      setLoading(false);
-      
-      if (result.success && result.devices) {
-        setDevices(result.devices);
-        setFilteredDevices(result.devices);
-      } else {
-        setError('Erro ao carregar dispositivos do servidor.');
+      try {
+        // Busca os dispositivos da API
+        const devicesResult = await getAllDevicesAction();
+        
+        // ➔ Busca as faturas/contas utilizando a service existente
+        const billingsResult = await getBillingsListAction();
+
+        // Verifica se o retorno possui contas e pega a 'tarifaEfetiva' da última conta cadastrada
+        if (billingsResult.success && billingsResult.content?.contas?.length) {
+          const contasArray = billingsResult.content.contas;
+          const lastContar = contasArray[contasArray.length - 1];
+          
+          if (lastContar && lastContar.tarifaEfetiva) {
+            setKilowattPrice(lastContar.tarifaEfetiva);
+          }
+        }
+
+        if (devicesResult.success && devicesResult.devices) {
+          setDevices(devicesResult.devices);
+          setFilteredDevices(devicesResult.devices);
+          localStorage.setItem('devices', JSON.stringify(devicesResult.devices));
+        } else {
+          setError('Erro ao carregar dispositivos do servidor.');
+        }
+      } catch (err) {
+        setError('Erro ao carregar dados da API.');
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchDevices();
+    fetchInitialData();
   }, []);
 
-  /** Aplica busca por nome + filtro de categoria */
-  const applyFilters = (search: string, category: string) => {
+  // Função de cálculo que utiliza o kilowattPrice atualizado pela conta
+  const calcMonthlyCost = (
+    watts: number,
+    hoursPerDay: number,
+    daysPerWeek: number,
+  ): number => {
+    let h = hoursPerDay * daysPerWeek;
+    let consumoMensalEmWatt = watts * h;
+    let valorConvertidoParaWhats = consumoMensalEmWatt / 1000;
+    let custoTotal = valorConvertidoParaWhats * kilowattPrice;
+    return custoTotal;
+  };
+
+  const applyFilters = (search: string) => {
     let result = devices;
 
     if (search.trim()) {
@@ -106,27 +123,17 @@ export default function DeviceList() {
       );
     }
 
-    if (category !== 'Todas categorias') {
-      result = result.filter((d) => d.categorie === category);
-    }
-
     setFilteredDevices(result);
   };
 
   const handleChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setValueSearch(val);
-    applyFilters(val, selectedCategory);
-  };
-
-  const handleChangeCategory = (category: string) => {
-    setSelectedCategory(category);
-    applyFilters(valueSearch, category);
+    applyFilters(val);
   };
 
   const handleCleanFilters = () => {
     setValueSearch('');
-    setSelectedCategory('Todas categorias');
     setFilteredDevices(devices);
   };
 
@@ -150,8 +157,6 @@ export default function DeviceList() {
 
   return (
     <PageWrapper>
-
-      {/* Resumo + botões de cadastro */}
       <DivDescription>
         <DescriptionPage
           title="Meus Dispositivos"
@@ -167,7 +172,6 @@ export default function DeviceList() {
         </Button>
       </DivDescription>
 
-      {/* Barra de busca + filtro de categoria */}
       <DivSearch>
         <SearchInput
           type="text"
@@ -175,17 +179,12 @@ export default function DeviceList() {
           value={valueSearch}
           onChange={handleChangeSearch}
         />
-        <SelectCategories
-          value={selectedCategory}
-          onChange={handleChangeCategory}
-        />
         
         <Button onClick={handleCleanFilters}>
-          Limpar filtros
+          Limpar busca
         </Button>
       </DivSearch>
 
-      {/* Grid de cards — clique → deviceDetail */}
       <DivDevices>
         {error && <p style={{ color: 'red' }}>{error}</p>}
         {loading && <p>Carregando dispositivos...</p>}
@@ -198,17 +197,15 @@ export default function DeviceList() {
           <CardDevice
             key={device.id}
             name={device.nome}
-            category={device.categorie ?? 'Computadores'}
             power={device.consumoWatts}
             hoursPerDay={device.usoMinutosHorasDia}
             daysPerWeek={device.usoDiasSemana}
-            costPerKwh={kilowattPrice}
+            costPerKwh={kilowattPrice} // ➔ Passa o valor da tarifa efetiva dinamicamente
             onClick={() => router.push(`/deviceDetail?id=${device.id}`)}
           />
         ))}
       </DivDevices>
 
-      {/* Link Mágico */}
       <MagicLinkBanner>
         <MagicLinkLeft>
           <MagicLinkIcon>🔗</MagicLinkIcon>

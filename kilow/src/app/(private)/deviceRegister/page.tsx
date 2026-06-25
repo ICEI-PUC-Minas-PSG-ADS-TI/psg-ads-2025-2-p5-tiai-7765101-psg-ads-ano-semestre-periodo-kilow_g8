@@ -5,8 +5,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Button from '@/components/button';
 import CardDevice from '@/components/cardDevice/index';
 
-// 🔥 Importe a sua action diretamente dos serviços/ações
 import { createDeviceAction } from '@/actions/device'; 
+import { getBillingsListAction } from '@/actions/services/billing'; // ➔ Importa a service de faturas
 
 import {
   PageWrapper,
@@ -19,7 +19,6 @@ import {
   FormGroup,
   FormLabel,
   FormInput,
-  FormSelect,
   FormRow,
   FormHint,
   PreviewCard,
@@ -28,19 +27,8 @@ import {
   FooterRow,
 } from './style';
 
-const CATEGORIES = [
-  'Computadores',
-  'Climatização',
-  'Monitores',
-  'Áudio',
-  'Redes',
-];
-
-const RATE_PER_KWH = 0.75;
-
 interface FormState {
   nome: string;
-  categoria: string;
   consumoWatts: string;
   usoHorasDia: string;
   usoDiasSemana: string;
@@ -48,7 +36,6 @@ interface FormState {
 
 const initialForm: FormState = {
   nome: '',
-  categoria: '',
   consumoWatts: '',
   usoHorasDia: '',
   usoDiasSemana: '',
@@ -60,34 +47,54 @@ export default function CadastroDispositivo() {
 
   const [form, setForm] = useState<FormState>(initialForm);
   const [loading, setLoading] = useState(false);
+  
+  // ➔ Estado dinâmico para a tarifa, inicializado com 0.75
+  const [ratePerKwh, setRatePerKwh] = useState(0.75);
 
   useEffect(() => {
-    const nomeUrl = searchParams.get('nome') || '';
-    const potenciaUrl = searchParams.get('potencia') || '';
+    const fetchInitialData = async () => {
+      const nomeUrl = searchParams.get('nome') || '';
+      const potenciaUrl = searchParams.get('potencia') || '';
 
-    if (nomeUrl || potenciaUrl) {
-      setForm((prev) => ({
-        ...prev,
-        nome: nomeUrl || prev.nome,
-        consumoWatts: potenciaUrl || prev.consumoWatts,
-      }));
-    }
+      if (nomeUrl || potenciaUrl) {
+        setForm((prev) => ({
+          ...prev,
+          nome: nomeUrl || prev.nome,
+          consumoWatts: potenciaUrl || prev.consumoWatts,
+        }));
+      }
+
+      // ➔ Busca a tarifa efetiva salva na conta mais recente para sincronizar o preview
+      try {
+        const billingsResult = await getBillingsListAction();
+        if (billingsResult.success && billingsResult.content?.contas?.length) {
+          const contasArray = billingsResult.content.contas;
+          const lastContar = contasArray[contasArray.length - 1];
+          
+          if (lastContar && lastContar.tarifaEfetiva) {
+            setRatePerKwh(lastContar.tarifaEfetiva);
+          }
+        }
+      } catch (error) {
+        console.error("Erro ao carregar tarifa dinâmica no cadastro:", error);
+      }
+    };
+
+    fetchInitialData();
   }, [searchParams]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const isFormValid =
     form.nome.trim() !== '' &&
-    form.categoria !== '' &&
     Number(form.consumoWatts) > 0 &&
     Number(form.usoHorasDia) > 0 &&
     Number(form.usoDiasSemana) > 0;
 
-  // 🔥 Nova função handleSave integrada com a Action
   const handleSave = async () => {
     if (!isFormValid) return;
 
@@ -95,18 +102,15 @@ export default function CadastroDispositivo() {
 
     try {
       const payload = {
-        nome: form.nome,
-        // Certifique-se de que as chaves batem com a interface CreateDeviceRequest do seu back-end
-        categorie: form.categoria, 
-        consumoWatts: parseFloat(form.consumoWatts),
+        nome: form.nome.trim(),
+        // ➔ Alterado de parseFloat/Number para forçar o formato decimal que o Java espera
+        consumoWatts: parseFloat(form.consumoWatts) ? parseFloat(form.consumoWatts) : 0.0,
         usoMinutosHorasDia: parseInt(form.usoHorasDia, 10),
         usoDiasSemana: parseInt(form.usoDiasSemana, 10),
-        consumoMensalKwh: 0, // Adicione caso o seu DTO exija este campo obrigatório
       };
 
-      console.log('Enviando payload para a Action:', payload);
+      console.log('Enviando payload forçado para a Action:', payload);
 
-      // Chamando a sua action configurada
       const response = await createDeviceAction(payload as any);
 
       console.log('Resposta da Action:', response);
@@ -125,7 +129,6 @@ export default function CadastroDispositivo() {
   };
 
   const previewName = form.nome.trim() || 'Novo dispositivo';
-  const previewCategory = form.categoria || 'Computadores';
   const previewPower = Number(form.consumoWatts) || 0;
   const previewHours = Number(form.usoHorasDia) || 0;
   const previewDays = Number(form.usoDiasSemana) || 0;
@@ -150,25 +153,6 @@ export default function CadastroDispositivo() {
                 value={form.nome}
                 onChange={handleChange}
               />
-            </FormGroup>
-
-            <FormGroup>
-              <FormLabel htmlFor="categoria">Categoria</FormLabel>
-              <FormSelect
-                id="categoria"
-                name="categoria"
-                value={form.categoria}
-                onChange={handleChange}
-              >
-                <option value="" disabled>
-                  Selecione uma categoria
-                </option>
-                {CATEGORIES.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
-                ))}
-              </FormSelect>
             </FormGroup>
 
             <FormGroup>
@@ -242,11 +226,10 @@ export default function CadastroDispositivo() {
             <PreviewWrapper>
               <CardDevice
                 name={previewName}
-                category={previewCategory}
                 power={previewPower}
                 hoursPerDay={previewHours}
                 daysPerWeek={previewDays}
-                costPerKwh={RATE_PER_KWH}
+                costPerKwh={ratePerKwh} // ➔ Inserido o state dinâmico da tarifa efetiva
               />
             </PreviewWrapper>
           </PreviewCard>

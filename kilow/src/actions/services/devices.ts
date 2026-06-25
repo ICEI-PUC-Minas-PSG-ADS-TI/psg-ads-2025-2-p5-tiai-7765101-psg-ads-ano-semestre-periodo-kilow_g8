@@ -1,13 +1,18 @@
 'use server';
 
 import { ActionResponse } from '../types/auth';
-import { 
-  // Importe os tipos correspondentes aos seus DTOs de Device
-} from '../types/devices';
 import api from '../utils/api';
 import { handleActionError } from '../utils/handleActionError';
 
 const deviceURL = '/devices';
+
+// Interface para o request de cadastro, garantindo tipagem segura
+interface CreateDevicePayload {
+  nome: string;
+  consumoWatts: number;
+  usoMinutosHorasDia: number;
+  usoDiasSemana: number;
+}
 
 // Listar todos os dispositivos
 export const getAllDevicesAction = async (): Promise<any> => {
@@ -19,14 +24,34 @@ export const getAllDevicesAction = async (): Promise<any> => {
   }
 };
 
-// Cadastrar novo dispositivo
+// Cadastrar novo dispositivo (com formatação decimal forçada para o Double do Java)
 export const createDeviceAction = async (
-  request: any
+  rawRequest: any
 ): Promise<any> => {
   try {
-    const { data } = await api.post(`${deviceURL}/register`, request);
+    // Força o parse para garantir que o consumoWatts seja tratado como ponto flutuante (Double)
+    const payload: CreateDevicePayload = {
+      nome: rawRequest.nome ? rawRequest.nome.trim() : '',
+      consumoWatts: rawRequest.consumoWatts ? parseFloat(rawRequest.consumoWatts) : 0.0,
+      usoMinutosHorasDia: rawRequest.usoMinutosHorasDia ? parseInt(rawRequest.usoMinutosHorasDia, 10) : 0,
+      usoDiasSemana: rawRequest.usoDiasSemana ? parseInt(rawRequest.usoDiasSemana, 10) : 0,
+    };
+
+    console.log("Tentando cadastrar dispositivo com o payload formatado:", JSON.stringify(payload));
+    
+    const { data } = await api.post(`${deviceURL}/register`, payload);
+    
+    console.log("Sucesso ao cadastrar. Resposta do Java:", data);
     return { success: true, newDevice: data };
-  } catch (error) {
+  } catch (error: any) {
+    console.error("ERRO COMPLETO CAPTURADO NA ACTION:");
+    console.error("Mensagem:", error.message);
+    
+    if (error.response) {
+      console.error("Status do Java:", error.response.status);
+      console.error("Dados de erro do Java:", error.response.data);
+    }
+    
     return handleActionError(error);
   }
 };
@@ -34,7 +59,6 @@ export const createDeviceAction = async (
 // Extrair potência e nome através do Link (IA)
 export const extractWattsFromUrlAction = async (url: string): Promise<any> => {
   try {
-    // A rota '/ia/getWatts' deve bater com o endpoint do seu back-end Java
     const { data } = await api.post('/ia/getWatts', { url });
     return { success: true, deviceData: data };
   } catch (error) {
